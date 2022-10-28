@@ -1,25 +1,20 @@
 # ChatterSquare
 
-
-
-Brief Application description
+##  Description
     ChatterSquare is a messaging application. Each message is a point, the more you talk the more points you earn. Points can be used to get emojis or additional perks.
 
-Contributors - In this case, it will be the team Members
-    Slater O’Brien: slob2062@colorado.edu ; slaterob (github)
-    Sam Jansen: saja2752@colorado.edu ; TiiLeaf
-    Rahul Shamkuwar: rash6973@colorad.edu ; rahulshamkuwar (github),
-    Raleigh Darcy: rada2150@colorado.edu ; raleighjd (git)
-    Rachel Lam: rala5772@colorado.edu ; rachelmlam (github)
-    Gabriel Khabner:
+## Contributors
+- Slater O’Brien: slob2062@colorado.edu; slaterob
+- Sam Jansen: saja2752@colorado.edu; TiiLeaf
+- Rahul Shamkuwar: rash6973@colorad.edu; rahulshamkuwar
+- Raleigh Darcy: rada2150@colorado.edu; raleighjd
+- Rachel Lam: rala5772@colorado.edu;
+- Gabriel Khabner:
 
-Technology Stack used for the project
+## Tech Stack Used
 
-Prerequisites to run the application - Any software that needs to be installed to run the application
+## Prerequisites
 
-Instructions on how to run the application locally.
+## Running the Application Locally
 
-How to run the tests, if applicable
-
-Link to the deployed application, if applicable
-e
+## Using the Deployed Application
