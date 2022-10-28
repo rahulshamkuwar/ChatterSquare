@@ -1,7 +1,7 @@
 # ChatterSquare
 
 ##  Description
-    ChatterSquare is a messaging application. Each message is a point, the more you talk the more points you earn. Points can be used to get emojis or additional perks.
+ChatterSquare is a messaging application. Each message is a point, the more you talk the more points you earn. Points can be used to get emojis or additional perks.
 
 ## Contributors
 - Slater O’Brien: slob2062@colorado.edu; slaterob
