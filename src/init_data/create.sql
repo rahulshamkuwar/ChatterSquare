@@ -1,0 +1,17 @@
+DROP TABLE IF EXISTS users CASCADE;
+CREATE TABLE users (
+  userId SERIAL PRIMARY KEY,
+  username VARCHAR(50) NOT NULL,
+  password CHAR(60) NOT NULL,
+  isAdmin BOOLEAN NOT NULL
+);
+
+DROP TABLE IF EXISTS messages CASCADE;
+CREATE TABLE messages (
+  messageId SERIAL PRIMARY KEY,
+  message TEXT NOT NULL,
+  time TIMESTAMPTZ NOT NULL,
+  userId INT NOT NULL,
+  CONSTRAINT fk_user FOREIGN KEY (userId) REFERENCES users(userId)
+);
+
