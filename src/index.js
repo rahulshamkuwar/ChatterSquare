@@ -54,18 +54,84 @@ app.use(
   })
 );
 
+// For now redirects to login.
+// TODO: Change to redirect to the square page when it is implemented.
 app.get("/", (req, res) => {
   res.redirect("/login");
 });
 
+// Render login
 app.get('/login', (req, res) => {
-  res.status(200).render("pages/login");
+  res.status(200).render("pages/login", req.query);
 });
 
+// Login Auth
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  const getUser = "SELECT password FROM users WHERE username = $1";
+  const user = await db.task("post/login", async task => {
+    return await task.one(getUser, [username]);
+  }).catch((err) => {
+    console.log(err);
+    if (err.message === "No data returned from the query.") {
+      // Even though format is deprecated, it still works fine and there is no other alternative. Refer to https://github.com/nodejs/node/issues/25099
+      res.redirect(url.format({
+        pathname:"/register",
+        query: {
+          message: "The username provided does not exist.",
+          error: true,
+          errorMessage: err
+        }
+      }));
+    } else {
+      res.status(500).render("pages/login", {
+        message: "There was an error getting the username from database.",
+        error: true,
+        errorMessage: err
+      });
+    }
+    return;
+  });
+  bcrypt.compare(password, user.password,).then((result) => {
+    if (result) {
+      req.session.user = {
+        api_key: process.env.API_KEY,
+      };
+      req.session.save();
+      // TODO: redirect to the square page
+    } else {
+      throw Error("Incorrect password.");
+    }
+  }).catch(err => {
+    console.log(err);
+    res.status(400).render("pages/login", { 
+      message: {
+        summary: "Incorrect password.",
+        error: err
+      },
+      error: true
+    });
+  });
+});
+
+// Authentication Middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect("/login");
+  }
+  next();
+};
+
+// Authentication Required
+app.use(auth);
+
+// Render register page
 app.get('/register', (req, res) => {
   res.status(200).render("pages/register", req.query);
 });
 
+// Register Auth
 app.post('/register', async (req, res) => {
   const { username, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -74,7 +140,6 @@ app.post('/register', async (req, res) => {
   db.task("post/register", async task => {
     return await task.none(query, [username, hashedPassword, false]);
   }).then(() => {
-    // Even though format is deprecated, it still works fine and there is no other alternative. Refer to https://github.com/nodejs/node/issues/25099
     res.redirect(url.format({
       pathname:"/login",
       query: {
