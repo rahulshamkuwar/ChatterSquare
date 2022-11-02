@@ -1,0 +1,37 @@
+<%- include ('../partials/header') %>
+<main>
+  <div class="container-fluid">
+    <h1>ChatterSquare Testing</h1><hr>
+    <ul id="messageHistory"></ul>
+    <form id="form" action="">
+      <input type="text" id="input" autocomplete="off" placeholder="Type your message here..."/>
+      <button>Send</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+
+      var messages = document.getElementById('messageHistory');
+      var form = document.getElementById('form');
+      var input = document.getElementById('input');
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit('message', {"text": input.value});
+          input.value = '';
+        }
+      });
+
+      socket.on('message', function(msg) {
+        var elt = document.createElement('li');
+        elt.innerHTML = `${msg.text}`;
+        messages.appendChild(elt);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+    </script>
+  </div>
+</main>
+</html>
+</body>

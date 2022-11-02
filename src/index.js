@@ -1,20 +1,15 @@
+//DEPENDENCIES:
 const express = require("express");
 const pgp = require("pg-promise")();
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const bcrypt = require("bcrypt");
-const axios = require("axios");
 const socketio = require("socket.io");
 const http = require('http');
-
-const app = express();
-const server = http.createServer(app);
-const io = socketio(server);
-
-const PORT = 3000 || process.env.PORT;
 const url = require('url');
 
-// database configuration
+//GLOBALS:
+const PORT = 3000 || process.env.PORT;
 const dbConfig = {
   host: "db",
   port: 5432,
@@ -23,29 +18,29 @@ const dbConfig = {
   password: process.env.POSTGRES_PASSWORD,
 };
 
-const db = pgp(dbConfig);
+//create server
+const app = express();
+const server = http.createServer(app);
+const io = socketio(server);
 
-// Test DB
+//connect server to database
+const db = pgp(dbConfig);
 db.connect().then(obj => {
-  console.log("Database connection successful"); // you can view this message in the docker compose logs
+  console.log("Database connection successful.");
   obj.done(); // success, release the connection;
 }).catch(error => {
   console.log("ERROR:", error.message || error);
 });
 
-// Enable EJS Template Engine
+//app middleware
 app.set("view engine", "ejs");
-
-// Use parsing middleware
+app.use(express.static('resources'));
 app.use(bodyParser.json());
-
 app.use(
   bodyParser.urlencoded({
     extended: true,
   })
 );
-
-// Setup user sessions
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -53,11 +48,23 @@ app.use(
     resave: false,
   })
 );
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    // return res.redirect("/login");
+  }
+  next();
+};
+app.use(auth);
+
+//once server is setup, start listening
+server.listen(3000, () => console.log(`Server is listening on port ${PORT}`));
+
 
 // For now redirects to login.
 // TODO: Change to redirect to the square page when it is implemented.
 app.get("/", (req, res) => {
-  res.redirect("/login");
+  res.redirect("/square");
 });
 
 // Render login
@@ -114,17 +121,6 @@ app.post('/login', async (req, res) => {
   });
 });
 
-// Authentication Middleware.
-const auth = (req, res, next) => {
-  if (!req.session.user) {
-    // Default to login page.
-    return res.redirect("/login");
-  }
-  next();
-};
-
-// Authentication Required
-app.use(auth);
 
 // Render register page
 app.get('/register', (req, res) => {
@@ -166,8 +162,24 @@ app.post('/register', async (req, res) => {
   });
 });
 
-io.on("connection", (socket) => {
- console.log("A user is connected");
+//Square Livechat Logic
+var messageHistory = [];
+
+app.get('/square', (req, res) => {
+  res.status(200).render("pages/square");
 });
 
-server.listen(3000, () => console.log(`Server is listening on port ${PORT}`));
+io.on("connection", (socket) => {
+  console.log("[SOCKET] New socket.");
+  for (var i = 0; i < messageHistory.length; i++) {
+    socket.emit('message', messageHistory[i]);
+  }
+
+  socket.on('message', (msg) => {
+    messageHistory.push(msg);
+    if (messageHistory.length >= 10) {
+      messageHistory.shift();
+    }
+    io.emit('message', msg);
+  });
+});
