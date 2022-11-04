@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const socketio = require("socket.io");
 const http = require('http');
 const url = require('url');
+const { send } = require("process");
 
 //GLOBALS:
 const PORT = 3000 || process.env.PORT;
@@ -103,6 +104,7 @@ app.post('/login', async (req, res) => {
     if (result) {
       req.session.user = {
         api_key: process.env.API_KEY,
+        
       };
       req.session.save();
       // TODO: redirect to the square page
@@ -162,7 +164,7 @@ app.post('/register', async (req, res) => {
   });
 });
 
-//Square Livechat Logic
+//Square Livechat Serverside Logic
 var messageHistory = [];
 
 app.get('/square', (req, res) => {
@@ -170,16 +172,40 @@ app.get('/square', (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("[SOCKET] New socket.");
-  for (var i = 0; i < messageHistory.length; i++) {
-    socket.emit('message', messageHistory[i]);
-  }
+  //A NEW SOCKET CONNECTED
+  console.log(`[SOCKET ${socket.id[0]}] Opened.`);
+  socket.square = 'general';
+  assoicateSocketToUser();
+  sendMessageHistory(socket);
+
 
   socket.on('message', (msg) => {
+    console.log(`[SOCKET ${socket.id[0]} - ${socket.square}] ${msg.text}`);
     messageHistory.push(msg);
-    if (messageHistory.length >= 10) {
+    if (messageHistory.length >= 80) {
       messageHistory.shift();
     }
     io.emit('message', msg);
   });
+
+  socket.on("changeSquare", (data) => {
+    socket.square = data.square;
+    sendMessageHistory(socket);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`[SOCKET ${socket.id[0]}] Closed.`);
+  });
+
 });
+
+function assoicateSocketToUser(socketId, userId) {
+  //TODO
+  //attach an attribute to the socket object
+}
+
+function sendMessageHistory(socket) {
+  for (var i = 0; i < messageHistory.length; i++) {
+    socket.emit('message', messageHistory[i]);
+  }
+}
