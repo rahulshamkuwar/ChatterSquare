@@ -24,6 +24,10 @@ app.use(
   })
 );
 
+//serving resources
+const path = require('path');
+app.use("/resources", express.static(path.join(__dirname, "resources")));
+
 // Setup user sessions
 app.use(
   session({
@@ -32,10 +36,6 @@ app.use(
     resave: false,
   })
 );
-
-//serving resources
-const path = require('path');
-app.use("/resources", express.static(path.join(__dirname, "resources")));
 
 app.use("/", defaultRouter);
 
