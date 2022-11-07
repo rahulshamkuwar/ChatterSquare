@@ -54,6 +54,10 @@ app.use(
   })
 );
 
+//serving resources
+const path = require('path');
+app.use("/resources", express.static(path.join(__dirname, "resources")));
+
 // For now redirects to login.
 // TODO: Change to redirect to the square page when it is implemented.
 app.get("/", (req, res) => {
