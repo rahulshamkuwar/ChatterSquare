@@ -2,24 +2,78 @@
 
 <main>
   <div class="container-fluid">
-    <form action ="/login" method = "POST">
-      <div class="mb-3"> 
+
+     
+    <!--register form--> 
+    <form action ="/register" method = "POST">
+
+      <div class="mb-3">
+        <!-- email -->
           <label for = "email" class="form-label">Email Adress</label>
           <input type="email" class="form-control" id="email" name="email">
       </div>
+
       <div class="mb-3">
+        <!-- username-->
         <label for ="username" class="form-label">User Name</label>
         <input type="username" class="form-control" id="username" name="username">
       </div>
+
+
       <div class="mb-3">
+        <!-- password-->
         <label for ="password" class="form-label">Password</label>
         <input type="password" class="form-control" id="password" name="password">
       </div>
 
-
-
-      <button type ="submit" class="btn btn-primary">Submit</submit>
+      <!-- submit button with get started displayed-->
+      <button type ="submit" class="btn btn-primary">Get Started</submit>
     </form>
+
+    <!-- Google button (work in progress)-->
+   <!--
+    <html>
+      <head>
+        <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
+      </head>
+      <body>
+        <div id="my-signin2"></div>
+        <script>
+          function onSuccess(googleUser) {
+            console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+          }
+          function onFailure(error) {
+            console.log(error);
+          }
+          function renderButton() {
+            gapi.signin2.render('my-signin2', {
+              'scope': 'profile email',
+              'width': 240,
+              'height': 50,
+              'longtitle': true,
+              'theme': 'dark',
+              'onsuccess': onSuccess,
+              'onfailure': onFailure
+            });
+          }
+        </script>
+      
+        <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+      </body>
+      </html> 
+   --> 
+   
+   <!-- redirect to login page-->
+   <!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="refresh" content="7; url='https://www.chattersquare.com'" />
+  </head>
+  <body>
+    <p>Already have an account? <a href="https://www.w3docs.com">Log in/a>.</p>
+  </body>
+</html>
+
   </div>
 </main>
 
