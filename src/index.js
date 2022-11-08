@@ -2,18 +2,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const http = require('http');
-const socketio = require("socket.io");
 
-//routes
 const defaultRouter = require("./routes/index");
 const loginRouter = require("./routes/login");
-const squareRouter = require("./routes/square");
 const registerRouter = require("./routes/register");
 
 const app = express();
 const server = http.createServer(app);
-const chatLogic = require("./services/chat")
-const io = socketio(server);
 
 const PORT = 3000 || process.env.PORT;
 
@@ -29,10 +24,9 @@ app.use(
   })
 );
 
-
-//pass socket connections to chat.js
-chatLogic.linkToSocketioInstance(io);
-io.on("connection", chatLogic.connection);
+//serving resources
+const path = require('path');
+app.use("/resources", express.static(path.join(__dirname, "resources")));
 
 // Setup user sessions
 app.use(
@@ -43,34 +37,10 @@ app.use(
   })
 );
 
-//serving resources
-const path = require('path');
-app.use("/resources", express.static(path.join(__dirname, "resources")));
-
-// For now redirects to login.
-// TODO: Change to redirect to the square page when it is implemented.
-app.get("/", (req, res) => {
-  res.redirect("/login");
-});
-
-//TODO: actually implement the auth flow, 
-//the / endpoint should redirect to square,
-// using this auth middleware to catch user who need to login and handle them seperatley
-const auth = (req, res, next) => {
-  if (!req.session.user) {
-    //Default to login page.
-    //return res.redirect("/login");
-  }
-  next();
-};
-app.use(auth);
-
 app.use("/", defaultRouter);
 
 app.use("/login", loginRouter);
 
 app.use("/register", registerRouter);
-
-app.use("/square", squareRouter);
 
 server.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
