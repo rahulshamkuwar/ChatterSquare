@@ -34,8 +34,13 @@ exports.login_post = async (req, res) => {
 
   if (!user) return;
 
-  bcrypt.compare(password, user.password,).then((result) => {
+  bcrypt.compare(password, user.password).then((result) => {
     if (result) {
+      req.session.user = {
+        name: req.body.username,
+        id: "foo"
+      };
+      req.session.save();
       res.redirect("/square");
     } else {
       throw Error("Incorrect password.");
