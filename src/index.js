@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const http = require('http');
 const socketio = require("socket.io");
+const path = require('path');
 
 //routes
 const defaultRouter = require("./routes/index");
@@ -19,6 +20,7 @@ const PORT = 3000 || process.env.PORT;
 
 // Enable EJS Template Engine
 app.set("view engine", "ejs");
+app.set('views', path.join(__dirname, '/views'));
 
 // Use parsing middleware
 app.use(bodyParser.json());
@@ -29,10 +31,12 @@ app.use(
   })
 );
 
-
 //pass socket connections to chat.js
 chatLogic.linkToSocketioInstance(io);
 io.on("connection", chatLogic.connection);
+
+//serve the static resource files
+app.use("/resources", express.static(path.join(__dirname, "resources")));
 
 // Setup user sessions
 app.use(
@@ -42,21 +46,6 @@ app.use(
     resave: false,
   })
 );
-
-//serve the static resource files
-app.use(express.static('resources'));
-
-//TODO: actually implement the auth flow, 
-//the / endpoint should redirect to square,
-// using this auth middleware to catch user who need to login and handle them seperatley
-const auth = (req, res, next) => {
-  if (!req.session.user) {
-    //Default to login page.
-    //return res.redirect("/login");
-  }
-  next();
-};
-app.use(auth);
 
 app.use("/", defaultRouter);
 

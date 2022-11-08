@@ -10,8 +10,9 @@ router.get('/', login_controller.login_get);
 // Login Auth
 router.post('/', login_controller.login_post);
 
-// TODO: Fix Auth Middleware
-// // Authentication Middleware.
+// TODO: actually implement the auth flow, 
+// the / endpoint should redirect to square,
+// using this auth middleware to catch user who need to login and handle them seperatley
 // const auth = (req, res, next) => {
 //   if (!req.session.user) {
 //     // Default to login page.
