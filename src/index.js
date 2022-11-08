@@ -10,6 +10,7 @@ const defaultRouter = require("./routes/index");
 const loginRouter = require("./routes/login");
 const squareRouter = require("./routes/square");
 const registerRouter = require("./routes/register");
+const profileRouter = require("./routes/profile");
 
 const app = express();
 const server = http.createServer(app);
@@ -71,5 +72,7 @@ app.use("/login", loginRouter);
 app.use("/register", registerRouter);
 
 app.use("/square", squareRouter);
+
+app.use("/profile", profileRouter);
 
 server.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
