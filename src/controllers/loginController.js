@@ -12,6 +12,11 @@ exports.login_post = async (req, res) => {
     const { password:hashedPassword } = user;
     bcrypt.compare(password, hashedPassword).then((result) => {
       if (result) {
+        req.session.user = {
+          username: username,
+          id: result.userid
+        };
+        req.session.save();
         res.redirect("/square");
       } else {
         throw Error("Incorrect password.");

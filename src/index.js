@@ -31,6 +31,8 @@ app.use(
   })
 );
 
+
+
 //pass socket connections to chat.js
 chatLogic.linkToSocketioInstance(io);
 io.on("connection", chatLogic.connection);
@@ -46,6 +48,21 @@ app.use(
     resave: false,
   })
 );
+
+//make sure users who aren't logged in get sent to the login page when they go to /square
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    if (req.path !== "/login" && req.path !== "/register") {
+      return res.redirect("/login");
+    }
+  } else {
+    if (req.path === "/login" || req.path === "/register") {
+      return res.redirect("/square");
+    }
+  }
+  next();
+};
+app.use(auth);
 
 app.use("/", defaultRouter);
 
