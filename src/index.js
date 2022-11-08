@@ -43,8 +43,15 @@ app.use(
   })
 );
 
-//serve the static resource files
-app.use(express.static('resources'));
+//serving resources
+const path = require('path');
+app.use("/resources", express.static(path.join(__dirname, "resources")));
+
+// For now redirects to login.
+// TODO: Change to redirect to the square page when it is implemented.
+app.get("/", (req, res) => {
+  res.redirect("/login");
+});
 
 //TODO: actually implement the auth flow, 
 //the / endpoint should redirect to square,
