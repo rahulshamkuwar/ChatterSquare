@@ -10,6 +10,7 @@ const defaultRouter = require("./routes/index");
 const loginRouter = require("./routes/login");
 const squareRouter = require("./routes/square");
 const registerRouter = require("./routes/register");
+const profileRouter = require("./routes/profile");
 
 const app = express();
 const server = http.createServer(app);
@@ -17,6 +18,10 @@ const chatLogic = require("./services/chat")
 const io = socketio(server);
 
 const PORT = 3000 || process.env.PORT;
+
+//serving resources
+const path = require('path');
+app.use("/resources", express.static(path.join(__dirname, "resources")));
 
 // Enable EJS Template Engine
 app.set("view engine", "ejs");
@@ -71,5 +76,7 @@ app.use("/login", loginRouter);
 app.use("/register", registerRouter);
 
 app.use("/square", squareRouter);
+
+app.use("/profile", profileRouter);
 
 server.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
