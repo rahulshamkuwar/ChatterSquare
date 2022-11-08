@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const url = require('url');
-const db = require("../config/db.config").db;
+const db = require("../services/database");
 
 exports.register_get = (req, res) => {
   res.status(200).render("pages/register", req.query);
@@ -9,11 +9,7 @@ exports.register_get = (req, res) => {
 exports.register_post = async (req, res) => {
   const { username, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
-  const query = "INSERT INTO users(username, password, isAdmin, points, profilePictre) VALUES ($1, $2, $3, $4, $5)";
-
-  db.task("post/register", async task => {
-    return await task.none(query, [username, hashedPassword, false, 0, ""]);
-  }).then(() => {
+  db.newUser({username: username, password: hashedPassword}).then(() => {
     res.redirect(url.format({
       pathname:"/login",
       query: {

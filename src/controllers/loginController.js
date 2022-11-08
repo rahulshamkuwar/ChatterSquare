@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const url = require('url');
-const db = require("../config/db.config").db;
+const db = require("../services/database");
 
 exports.login_get = (req, res) => {
   res.status(200).render("pages/login", req.query);
@@ -8,9 +8,29 @@ exports.login_get = (req, res) => {
 
 exports.login_post = async (req, res) => {
   const { username, password } = req.body;
-  const getUser = "SELECT password FROM users WHERE username = $1";
-  const user = await db.task("post/login", async task => {
-    return await task.one(getUser, [username]);
+  await db.getUser({username: username}).then((user) => {
+    const { password:hashedPassword } = user;
+    bcrypt.compare(password, hashedPassword).then((result) => {
+      if (result) {
+        req.session.user = {
+          username: username,
+          id: result.userid
+        };
+        req.session.save();
+        res.redirect("/square");
+      } else {
+        throw Error("Incorrect password.");
+      }
+    }).catch(err => {
+      console.log(err);
+      res.status(400).render("pages/login", { 
+        message: {
+          summary: "Incorrect password.",
+          error: err
+        },
+        error: true
+      });
+    });
   }).catch((err) => {
     console.log(err);
     if (err.message === "No data returned from the query.") {
@@ -30,29 +50,5 @@ exports.login_post = async (req, res) => {
         errorMessage: err
       });
     }
-  });
-
-  if (!user) return;
-
-  bcrypt.compare(password, user.password).then((result) => {
-    if (result) {
-      req.session.user = {
-        name: req.body.username,
-        id: "foo"
-      };
-      req.session.save();
-      res.redirect("/square");
-    } else {
-      throw Error("Incorrect password.");
-    }
-  }).catch(err => {
-    console.log(err);
-    res.status(400).render("pages/login", { 
-      message: {
-        summary: "Incorrect password.",
-        error: err
-      },
-      error: true
-    });
   });
 };
