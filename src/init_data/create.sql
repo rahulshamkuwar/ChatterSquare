@@ -5,7 +5,7 @@ CREATE TABLE users (
   password CHAR(60) NOT NULL,
   isAdmin BOOLEAN NOT NULL,
   points INT NOT NULL,
-  profilePictre TEXT NOT NULL
+  profilePicture TEXT NOT NULL
 );
 
 DROP TABLE IF EXISTS generalchat CASCADE;

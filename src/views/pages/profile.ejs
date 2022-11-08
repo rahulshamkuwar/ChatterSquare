@@ -3,6 +3,7 @@
 
 <main>
   <div class="container" style="background-color: #f8f9fa;">
+    <div class="col m-2"><%- include ('../partials/alert') %></div>
     <div class="row">
         <div class="col">
             <p class="h5 p-2">Your Profile</p>
@@ -11,9 +12,10 @@
             <a href="/logout" class="nav-link active float-end p-2">Logout</a>
         </div>
     </div>
-  </div>  
+  </div>
   
   <div class="container">
+    <% const user = locals.user; %>
     <!-- Profile Picture and Points Summary -->
     <div class="row d-flex justify-content-center align-items-center h-75">
         <div class="col col-md-6">
@@ -26,7 +28,7 @@
                     style="width: 180px; border-radius: 10px;">
                 </div>
                 <div class="flex-grow-1 ms-3">
-                    <h3 class="mb-1">Username</h3>
+                    <h3 class="mb-1"><%= user.username %> </h3>
                     <div class="d-flex pt-1">
                         <button type="button" class="btn btn-light btn-sm flex-shrink-1">Change Photo</button>
                         <button type="button" class="btn btn-light btn-sm flex-shrink-1">Edit Username</button>
@@ -40,7 +42,7 @@
           <div class="d-flex justify-content-end float-end py-1">
             <div>
                 <p class="mb-1 h5 text-end">You have</p>
-                <p class="h1">[Number]</p>
+                <p class="h1"><%= user.points %></p>
                 <p class="mb-1 h5 text-end">points.</p>
             </div>
           </div>
@@ -56,7 +58,7 @@
             <p class="h3">Username</p>
         </div>
         <div class="col col-8">
-            <p class="fs-4">[Username]</p>
+            <p class="fs-4"><%= user.username %></p>
         </div>
     </div>
     <div class="row">

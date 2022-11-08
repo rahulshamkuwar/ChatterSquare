@@ -19,10 +19,6 @@ const io = socketio(server);
 
 const PORT = 3000 || process.env.PORT;
 
-//serving resources
-const path = require('path');
-app.use("/resources", express.static(path.join(__dirname, "resources")));
-
 // Enable EJS Template Engine
 app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, '/views'));

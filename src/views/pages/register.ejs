@@ -1,9 +1,9 @@
 <%- include ('../partials/header') %>
 <%- include ('../partials/nav-bar') %>
-<$- include ('../partials/alert') %>
 
 <main>
   <div class="container-fluid">
+    <div class="col m-2"><%- include ('../partials/alert') %></div>
     <form action ="/register" method = "POST">
       <div class="mb-3">
         <label for ="username" class="form-label">Username</label>

@@ -9,12 +9,12 @@ exports.login_get = (req, res) => {
 exports.login_post = async (req, res) => {
   const { username, password } = req.body;
   await db.getUser({username: username}).then((user) => {
-    const { password:hashedPassword } = user;
+    const { password: hashedPassword, userid: userId} = user;
     bcrypt.compare(password, hashedPassword).then((result) => {
       if (result) {
         req.session.user = {
           username: username,
-          id: result.userid
+          userId: userId
         };
         req.session.save();
         res.redirect("/square");

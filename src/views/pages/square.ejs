@@ -1,6 +1,9 @@
 <%- include ('../partials/header') %>
+<%- include ('../partials/nav-bar') %>
+
 <main>
   <div class="container-fluid">
+    <div class="col m-2"><%- include ('../partials/alert') %></div>
     <p>Logged in as: <%=locals.user.username%></p>
     <h1>ChatterSquare Testing</h1>
     <ul id="messageHistory"></ul>
