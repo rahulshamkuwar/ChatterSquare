@@ -51,8 +51,14 @@ app.use(
 
 //make sure users who aren't logged in get sent to the login page when they go to /square
 const auth = (req, res, next) => {
-  if (req.path == "/square" && !req.session.user) {
-    return res.redirect("/login");
+  if (!req.session.user) {
+    if (req.path !== "/login" && req.path !== "/register") {
+      return res.redirect("/login");
+    }
+  } else {
+    if (req.path === "/login" || req.path === "/register") {
+      return res.redirect("/square");
+    }
   }
   next();
 };
