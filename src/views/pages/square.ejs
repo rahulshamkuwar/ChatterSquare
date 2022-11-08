@@ -1,0 +1,56 @@
+<%- include ('../partials/header') %>
+<main>
+  <div class="container-fluid">
+    <h1>ChatterSquare Testing</h1>
+    <ul id="messageHistory"></ul>
+    <form id="form" action="">
+      <select id="select">
+        <option value="general">General</option>
+        <option value="sports">Sports</option>
+        <option value="programming">Programming</option>
+        <option value="travel">Travel</option>
+      </select>
+      <input type="text" id="input" autocomplete="off" placeholder="Type your message here..."/>
+      <button>Send</button>
+    </form>
+
+    <script src="https://cdn.socket.io/4.5.3/socket.io.min.js" integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi" crossorigin="anonymous"></script>
+    <script>
+      var socket = io();
+
+      var messages = document.getElementById('messageHistory');
+      var form = document.getElementById('form');
+      var input = document.getElementById('input');
+      var select = document.getElementById('select');
+
+
+      select.value = 'general';
+      select.addEventListener('change', function(e) {
+        e.preventDefault();
+        socket.emit('changeSquare', {"square": select.value});
+        while (messages.firstChild) {
+          messages.removeChild(messages.firstChild);
+        }
+      });
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit('message', {"user": "ExampleUsername", "text": input.value, "square": select.value});
+          input.value = '';
+        }
+      });
+
+      socket.on('message', function(msg) {
+        if (msg.square != select.value)
+          return;
+        var elt = document.createElement('li');
+        elt.innerHTML = `<strong>${msg.user}:</strong> ${msg.text}`;
+        messages.appendChild(elt);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+    </script>
+  </div>
+</main>
+</html>
+</body>

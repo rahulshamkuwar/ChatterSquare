@@ -9,10 +9,10 @@ exports.register_get = (req, res) => {
 exports.register_post = async (req, res) => {
   const { username, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
-  const query = "INSERT INTO users(username, password, isAdmin) VALUES ($1, $2, $3)";
+  const query = "INSERT INTO users(username, password, isAdmin, points, profilePictre) VALUES ($1, $2, $3, $4, $5)";
 
   db.task("post/register", async task => {
-    return await task.none(query, [username, hashedPassword, false]);
+    return await task.none(query, [username, hashedPassword, false, 0, ""]);
   }).then(() => {
     res.redirect(url.format({
       pathname:"/login",

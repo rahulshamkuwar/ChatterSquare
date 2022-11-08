@@ -30,15 +30,13 @@ exports.login_post = async (req, res) => {
         errorMessage: err
       });
     }
-    return;
   });
+
+  if (!user) return;
+
   bcrypt.compare(password, user.password,).then((result) => {
     if (result) {
-      req.session.user = {
-        api_key: process.env.API_KEY,
-      };
-      req.session.save();
-      // TODO: redirect to the square page
+      res.redirect("/square");
     } else {
       throw Error("Incorrect password.");
     }
