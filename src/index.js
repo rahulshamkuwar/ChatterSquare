@@ -18,6 +18,7 @@ const bcrypt = require("bcrypt");
 const socketio = require("socket.io");
 const http = require('http');
 const url = require('url');
+const { send } = require("process");
 
 //GLOBALS:
 const PORT = 3000 || process.env.PORT;
@@ -81,7 +82,55 @@ app.get("/", (req, res) => {
 
 app.use("/login", loginRouter);
 
-app.use("/register", registerRouter);
+// Login Auth
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  const getUser = "SELECT password FROM users WHERE username = $1";
+  const user = await db.task("post/login", async task => {
+    return await task.one(getUser, [username]);
+  }).catch((err) => {
+    console.log(err);
+    if (err.message === "No data returned from the query.") {
+      // Even though format is deprecated, it still works fine and there is no other alternative. Refer to https://github.com/nodejs/node/issues/25099
+      res.redirect(url.format({
+        pathname:"/register",
+        query: {
+          message: "The username provided does not exist.",
+          error: true,
+          errorMessage: err
+        }
+      }));
+    } else {
+      res.status(500).render("pages/login", {
+        message: "There was an error getting the username from database.",
+        error: true,
+        errorMessage: err
+      });
+    }
+    return;
+  });
+  bcrypt.compare(password, user.password,).then((result) => {
+    if (result) {
+      req.session.user = {
+        api_key: process.env.API_KEY,
+        
+      };
+      req.session.save();
+      // TODO: redirect to the square page
+    } else {
+      throw Error("Incorrect password.");
+    }
+  }).catch(err => {
+    console.log(err);
+    res.status(400).render("pages/login", { 
+      message: {
+        summary: "Incorrect password.",
+        error: err
+      },
+      error: true
+    });
+  });
+});
 
 
 // Render register page
@@ -124,7 +173,7 @@ app.post('/register', async (req, res) => {
   });
 });
 
-//Square Livechat Logic
+//Square Livechat Serverside Logic
 var messageHistory = [];
 
 app.get('/square', (req, res) => {
@@ -132,16 +181,44 @@ app.get('/square', (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("[SOCKET] New socket.");
-  for (var i = 0; i < messageHistory.length; i++) {
-    socket.emit('message', messageHistory[i]);
-  }
+  //A NEW SOCKET CONNECTED
+  console.log(`[SOCKET ${socket.id[0]}] Opened.`);
+  socket.square = 'general';
+  assoicateSocketToUser();
+  sendMessageHistory(socket);
+
 
   socket.on('message', (msg) => {
+    console.log(`[SOCKET ${socket.id[0]} - ${socket.square}] ${msg.text}`);
     messageHistory.push(msg);
-    if (messageHistory.length >= 10) {
+    if (messageHistory.length >= 80) {
       messageHistory.shift();
     }
     io.emit('message', msg);
   });
+<<<<<<< HEAD
 });
+=======
+
+  socket.on("changeSquare", (data) => {
+    socket.square = data.square;
+    sendMessageHistory(socket);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`[SOCKET ${socket.id[0]}] Closed.`);
+  });
+
+});
+
+function assoicateSocketToUser(socketId, userId) {
+  //TODO
+  //attach an attribute to the socket object
+}
+
+function sendMessageHistory(socket) {
+  for (var i = 0; i < messageHistory.length; i++) {
+    socket.emit('message', messageHistory[i]);
+  }
+}
+>>>>>>> 1a30f94 (livechat backend logic for multiple channels)
