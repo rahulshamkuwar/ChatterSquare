@@ -11,7 +11,7 @@ const loginRouter = require("./routes/login");
 const squareRouter = require("./routes/square");
 const registerRouter = require("./routes/register");
 const profileRouter = require("./routes/profile");
-
+const logoutRouter = require("./routes/logout");
 const app = express();
 const server = http.createServer(app);
 const chatLogic = require("./services/chat")
@@ -74,5 +74,7 @@ app.use("/register", registerRouter);
 app.use("/square", squareRouter);
 
 app.use("/profile", profileRouter);
+
+app.use("/logout", logoutRouter);
 
 server.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));

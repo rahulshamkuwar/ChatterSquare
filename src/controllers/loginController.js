@@ -3,6 +3,8 @@ const url = require('url');
 const db = require("../services/database");
 
 exports.login_get = (req, res) => {
+  req.query.session = req.session;
+  req.query.pathname = "/login";
   res.status(200).render("pages/login", req.query);
 };
 
@@ -23,12 +25,11 @@ exports.login_post = async (req, res) => {
       }
     }).catch(err => {
       console.log(err);
-      res.status(400).render("pages/login", { 
-        message: {
-          summary: "Incorrect password.",
-          error: err
-        },
-        error: true
+      res.status(400).render("pages/login", {
+        message: "Incorrect password.",
+        error: true,
+        errorMessage: err,
+        pathname: "/login"
       });
     });
   }).catch((err) => {
@@ -47,7 +48,8 @@ exports.login_post = async (req, res) => {
       res.status(500).render("pages/login", {
         message: "There was an error getting the username from database.",
         error: true,
-        errorMessage: err
+        errorMessage: err,
+        pathname: "/login"
       });
     }
   });
