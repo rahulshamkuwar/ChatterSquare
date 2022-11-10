@@ -6,34 +6,36 @@
                 <img src="/resources/img/ChSq-Logo.png" alt="logo" width="30" height="30" class="d-inline-block align-text-top">
                 Home
             </a>
-            <div class="collapse navbar-collapse" id="navbar">
-                <!-- <ul class="navbar-nav">
-                    <li>
-                        <a href="/" class="nav-link active">Home</a>
-                    </li>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#chatter-navbar" aria-controls="chatter-navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="chatter-navbar">
+                    <% if (locals.user) { %>
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <%= locals.user.username %>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="/profile">Your Profile</a></li>
+                                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <img src="/resources/img/Generic-Profile-1600x1600.png" alt="pfp" width="30" height="30">
+                            </li>
+                        </ul>
+                    <% } else { %>
+                    <div class="navbar-nav ms-auto">
+                        <a href="/login" class="nav-link active">
+                            Login/Register
+                            <img src="/resources/img/Generic-Profile-1600x1600.png" alt="pfp" width="30" height="30">
+                        </a>
+                    </div>
+                    <% } %>
                 
-                    <a href="/dm" class="nav-link">Direct Message</a>
-                </ul> -->
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                      <% if (locals.user) { %>
-                        <a href="/profile" class="nav-link active">
-                                <%= locals.user.username %>
-                                <img src="/resources/img/Generic-Profile-1600x1600.png" alt="pfp" width="30" height="30">
-                            </a>
-                        <% } else { %>
-                            <a href="/login" class="nav-link active">
-                                Login/Register
-                                <img src="/resources/img/Generic-Profile-1600x1600.png" alt="pfp" width="30" height="30">
-                            </a>
-                        <% } %>
-                    </li>
-                </ul>
-                </div>
             </div>
         </div>
-           
-       
         
       </nav>
   </header>
