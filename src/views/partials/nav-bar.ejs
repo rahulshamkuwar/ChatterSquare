@@ -7,25 +7,23 @@
                 Home
             </a>
             <div class="collapse navbar-collapse" id="navbar">
-                <!-- <ul class="navbar-nav">
-                    <li>
-                        <a href="/" class="nav-link active">Home</a>
-                    </li>
-                
-                    <a href="/dm" class="nav-link">Direct Message</a>
-                </ul> -->
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                      <% if (locals.user) { %>
+                      <% if (locals.session.user) { %>
                         <a href="/profile" class="nav-link active">
-                                <%= locals.user.username %>
+                                <%= locals.session.user.username %>
                                 <img src="/resources/img/Generic-Profile-1600x1600.png" alt="pfp" width="30" height="30">
                             </a>
-                        <% } else { %>
-                            <a href="/login" class="nav-link active">
-                                Login/Register
-                                <img src="/resources/img/Generic-Profile-1600x1600.png" alt="pfp" width="30" height="30">
+                        <% } else { 
+                            if (locals.pathname === "/login") { %>
+                            <a href="/register" class="nav-link active">
+                                Register
                             </a>
+                            <% } else { %>
+                              <a href="/login" class="nav-link active">
+                                Login
+                              </a>
+                            <% } %>
                         <% } %>
                     </li>
                 </ul>
