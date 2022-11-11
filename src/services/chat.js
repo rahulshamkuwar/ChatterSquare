@@ -7,13 +7,13 @@ const linkToSocketioInstance = (ref) => {
 
 const connection = (socket) => {
  //A NEW SOCKET CONNECTED
- console.log(`[SOCKET ${socket.id[0]}] Opened.`);
+ //console.log(`[SOCKET ${socket.id[0]}] Opened.`);
  socket.square = 'general';
  sendMessageHistory(socket);
 
 
  socket.on('message', (msg) => {
-   console.log(`[SOCKET ${socket.id[0]} - ${socket.square}] ${msg.text}`);
+   //console.log(`[SOCKET ${socket.id[0]} - ${socket.square}] ${msg.text}`);
    messageHistory.push(msg);
    if (messageHistory.length >= 80) {
      messageHistory.shift();
@@ -27,7 +27,7 @@ const connection = (socket) => {
  });
 
  socket.on("disconnect", () => {
-   console.log(`[SOCKET ${socket.id[0]}] Closed.`);
+   //console.log(`[SOCKET ${socket.id[0]}] Closed.`);
  });
 };
 
