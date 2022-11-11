@@ -3,6 +3,8 @@ const url = require('url');
 const db = require("../services/database");
 
 exports.register_get = (req, res) => {
+  req.query.session = req.session;
+  req.query.pathname = "/register";
   res.status(200).render("pages/register", req.query);
 };
 
@@ -24,13 +26,15 @@ exports.register_post = async (req, res) => {
       res.status(400).render("pages/register", {
         message: "The user provided already exists.",
         error: true,
-        errorMessage: err
+        errorMessage: err,
+        pathname: "/register"
       });
     } else {
       res.status(500).render("pages/register", {
         message: "There was an error inserting to database.",
         error: true,
-        errorMessage: err
+        errorMessage: err,
+        pathname: "/register"
       });
     }
   });

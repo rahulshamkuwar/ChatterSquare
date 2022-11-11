@@ -10,11 +10,11 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="chatter-navbar">
-                    <% if (locals.user) { %>
+                    <% if (locals.session.user) { %>
                         <ul class="navbar-nav ms-auto">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <%= locals.user.username %>
+                                    <%= locals.session.user.username %>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item" href="/profile">Your Profile</a></li>
@@ -23,17 +23,21 @@
                             </li>
                             <li>
                                 <img src="/resources/img/Generic-Profile-1600x1600.png" alt="pfp" width="30" height="30">
-                            </li>
-                        </ul>
-                    <% } else { %>
-                    <div class="navbar-nav ms-auto">
-                        <a href="/login" class="nav-link active">
-                            Login/Register
-                            <img src="/resources/img/Generic-Profile-1600x1600.png" alt="pfp" width="30" height="30">
-                        </a>
-                    </div>
-                    <% } %>
-                
+                            </a>
+                        <% } else { 
+                            if (locals.pathname === "/login") { %>
+                            <a href="/register" class="nav-link active">
+                                Register
+                            </a>
+                            <% } else { %>
+                              <a href="/login" class="nav-link active">
+                                Login
+                              </a>
+                            <% } %>
+                        <% } %>
+                    </li>
+                </ul>
+                </div>
             </div>
         </div>
         
