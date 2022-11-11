@@ -3,31 +3,44 @@
 <main>
   <div class="container-fluid">
 
-     
+    
     <!--register form--> 
     <form action ="/register" method = "POST">
 
-      <div class="mb-3">
+
+      <!-- Logo   -->
+      <div class="mb-3 text-center">
+        <img src="../../resources/img/ChSq-Logo.png" alt="logo" width="120" height="120">
+      </div>
+
+
+
+      <div class="mb-3 text-center">
         <!-- email -->
           <label for = "email" class="form-label">Email Adress</label>
           <input type="email" class="form-control" id="email" name="email">
       </div>
 
-      <div class="mb-3">
+      <div class="mb-3 text-center">
         <!-- username-->
         <label for ="username" class="form-label">User Name</label>
         <input type="username" class="form-control" id="username" name="username">
       </div>
 
 
-      <div class="mb-3">
+      <div class="mb-3 text-center">
         <!-- password-->
         <label for ="password" class="form-label">Password</label>
         <input type="password" class="form-control" id="password" name="password">
       </div>
 
-      <!-- submit button with get started displayed-->
-      <button type ="submit" class="btn btn-primary">Get Started</submit>
+      <div class ="mb-3 text-center"> 
+          <!-- submit button with get started displayed-->
+      <button type ="submit button" class="btn btn-primary">Get Started</button>
+      </div>
+    
+      
+
     </form>
 
     <!-- Google button (work in progress)-->
@@ -63,6 +76,8 @@
       </html> 
    --> 
    
+
+
    <!-- redirect to login page-->
    <!DOCTYPE html>
 <html>
@@ -70,7 +85,7 @@
     <meta http-equiv="refresh" content="7; url='https://www.chattersquare.com'" />
   </head>
   <body>
-    <p>Already have an account? <a href="https://www.w3docs.com">Log in/a>.</p>
+    <p>Already have an account? <a href="/login">Log in </a>.</p>
   </body>
 </html>
 
