@@ -16,8 +16,6 @@ exports.register_post = async (req, res) => {
       pathname:"/login",
       query: {
         message: "Account successfully created.",
-        error: false,
-        errorMessage: ""
       }
     }));
   }).catch((err) => {
