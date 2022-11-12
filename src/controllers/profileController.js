@@ -30,8 +30,8 @@ exports.profile_post_change_password = async (req, res) => {
       if (result) {
         
         db.updateUser({userId: req.session.user.userId, password: newHashedPassword}).then(() => {
-          res.status(400).render("pages/profile", {
-            message: "Account successfully created.",
+          res.status(200).render("pages/profile", {
+            message: "Password successfully changed.",
             pathname: "/profile"
           });
         }).catch((err) => {
