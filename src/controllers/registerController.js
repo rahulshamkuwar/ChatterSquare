@@ -20,7 +20,7 @@ exports.register_post = async (req, res) => {
     }));
   }).catch((err) => {
     console.log(err);
-    if (err.constraint === "users_pkey") {
+    if (err.constraint === "users_username_key") {
       res.status(400).render("pages/register", {
         message: "The user provided already exists.",
         error: true,
