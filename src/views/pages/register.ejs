@@ -1,24 +1,124 @@
 <%- include ('../partials/header') %>
 <%- include ('../partials/nav-bar') %>
 
+
 <main>
   <div class="container-fluid">
-    <div class="col m-2"><%- include ('../partials/alert') %></div>
-    <form action ="/register" method = "POST">
-      <div class="mb-3">
-        <label for ="username" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" name="username">
+    <div class="mx-auto" style="width: 400px;">
+      <div class="col m-2"><%- include ('../partials/alert') %>
+
+        <div class="mb-3 text-center">
+          <img src="../../resources/img/ChSq-Logo.png" alt="logo" width="120" height="120">
+          <h3> Create an account</h3>
+          <p class="disabled">Join us at The Square!</p>
+        </div>
+        <!-- register form -->
+        <form action ="/register" method = "POST" class="needs-validation" novalidate>
+          <div class="mb-3"> 
+              <!-- username -->
+              <label for = "username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" name="username" required>
+              <div class="invalid-feedback">
+                Please choose a username.
+              </div>
+          </div>
+          <div class="mb-3">
+            <!-- password -->
+            <label for ="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+            <div class="invalid-feedback">
+              Please choose a password.
+            </div>
+          </div>
+          <div class="mb-3">
+            <!-- confirm password -->
+            <label for ="confirm_password" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password" onkeyup="validatePassword()">
+            <div id="match_password" hidden>
+              Passwords don't match.
+            </div>
+            <div id="empty_password" hidden>
+              This field cannot be empty.
+            </div>
+          </div>
+
+          <!-- submit button with register displayed-->
+          <div class="d-grid gap-2 mb-3">
+            <button type ="submit button" class="btn btn-primary">Register</button>
+          </div>
+
+          <!-- redirect to login page-->
+          <div class="float-start">
+            Already have an account? <a href="/login">Login</a>
+          </div>
+        </form>
+        <script type="text/javascript">
+          function validatePassword() {
+            const password = document.getElementById("password");
+            const confirm_password = document.getElementById("confirm_password");
+            const match = document.getElementById("match_password");
+            const empty = document.getElementById("empty_password");
+            if (password.value != confirm_password.value) {
+              confirm_password.setCustomValidity("Passwords don't match");
+              match.classList.add("invalid-feedback");
+              match.hidden = false;
+              empty.classList.remove("invalid-feedback");
+              empty.hidden = true;
+            } else if (confirm_password.value === "") {
+              console.log("empty");
+              confirm_password.setCustomValidity("This field cannot be empty.");
+              empty.classList.add("invalid-feedback");
+              empty.hidden = false;
+              match.classList.remove("invalid-feedback");
+              match.hidden = true;
+            }
+          }
+          var form = document.querySelector('.needs-validation');
+          form.addEventListener('submit', (event) => {
+            if (!form.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            validatePassword();
+            form.classList.add('was-validated');
+          }, false)
+        </script>
       </div>
-      <div class="mb-3">
-        <label for ="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" name="password">
-      </div>
-
-
-
-      <button type ="submit" class="btn btn-primary">Register</submit>
-    </form>
+    </div>
   </div>
 </main>
+
+    <!-- Google button (work in progress)-->
+   <!--
+    <html>
+      <head>
+        <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
+      </head>
+      <body>
+        <div id="my-signin2"></div>
+        <script>
+          function onSuccess(googleUser) {
+            console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+          }
+          function onFailure(error) {
+            console.log(error);
+          }
+          function renderButton() {
+            gapi.signin2.render('my-signin2', {
+              'scope': 'profile email',
+              'width': 240,
+              'height': 50,
+              'longtitle': true,
+              'theme': 'dark',
+              'onsuccess': onSuccess,
+              'onfailure': onFailure
+            });
+          }
+        </script>
+      
+        <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+      </body>
+      </html> 
+   --> 
 
 <%- include ('../partials/footer') %>
