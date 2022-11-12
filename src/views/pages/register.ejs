@@ -25,7 +25,7 @@
           <div class="mb-3">
             <!-- password -->
             <label for ="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" name="password" required>
+            <input type="password" class="form-control" id="password" name="password" required onkeyup="validatePassword()">
             <div class="invalid-feedback">
               Please choose a password.
             </div>
@@ -58,7 +58,9 @@
             const confirm_password = document.getElementById("confirm_password");
             const match = document.getElementById("match_password");
             const empty = document.getElementById("empty_password");
-            if (password.value != confirm_password.value) {
+            console.log(password.value);
+            console.log(confirm_password.value);
+            if (password.value !== confirm_password.value) {
               confirm_password.setCustomValidity("Passwords don't match");
               match.classList.add("invalid-feedback");
               match.hidden = false;
@@ -71,6 +73,9 @@
               empty.hidden = false;
               match.classList.remove("invalid-feedback");
               match.hidden = true;
+            } else {
+              console.log("resetting validity");
+              confirm_password.setCustomValidity("");
             }
           }
           var form = document.querySelector('.needs-validation');
