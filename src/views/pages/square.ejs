@@ -3,7 +3,7 @@
 
 <main>
   <div class="container-fluid">
-    <div class="col m-2"><%- include ('../partials/alert') %></div>
+    <div id="alert" class="col m-2"><%- include ('../partials/alert') %></div>
     <p>Logged in as: <%=locals.session.user.username%></p>
     <h1>ChatterSquare Testing</h1>
     <ul id="messageHistory"></ul>
@@ -32,6 +32,10 @@
       select.addEventListener('change', function(e) {
         e.preventDefault();
         socket.emit('changeSquare', {"square": select.value});
+        var alertBox = document.getElementById("alertbox");
+        if (alertBox) {
+          alertBox.remove();
+        }
         while (messages.firstChild) {
           messages.removeChild(messages.firstChild);
         }
@@ -40,21 +44,33 @@
       form.addEventListener('submit', function(e) {
         e.preventDefault();
         if (input.value) {
-          socket.emit('message', {"user": "<%=locals.session.user.username%>", "text": input.value, "square": select.value});
+          socket.emit('message', {"username": "<%=locals.session.user.username%>", "userid": "<%=locals.session.user.userId%>", "message": input.value, "square": select.value});
           input.value = '';
         }
       });
 
+      socket.on("alert", (data) => {
+        var alert = document.getElementById("alert");
+        var alertBox = document.createElement("div");
+        alertBox.id = "alertbox";
+        alertBox.classList.add("alert");
+        alertBox.classList.add("alert-danger");
+        alertBox.setAttribute("role", "alert");
+        alertBox.innerHTML = data.message;
+        alert.appendChild(alertBox);
+      });
+
       socket.on('message', function(msg) {
-        if (msg.square != select.value)
+        if (msg.square != select.value) {
           return;
+        }
         var elt = document.createElement('li');
-        elt.innerHTML = `<strong>${msg.user}:</strong> ${msg.text}`;
+        elt.innerHTML = `<strong>${msg.username}:</strong> ${msg.message}`;
         messages.appendChild(elt);
         window.scrollTo(0, document.body.scrollHeight);
       });
     </script>
   </div>
 </main>
-</html>
 </body>
+</html>
