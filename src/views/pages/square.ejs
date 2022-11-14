@@ -13,44 +13,80 @@
       <p>The Square</p>
     </div>
     <div class="right">
-      <p>Username</p>
+      <p><%=locals.session.user.username%></p>
       <div class="pfp image"></div>
     </div>
   </div>
   <div class="content">
 
     <div class="channels">
-      <div>General</div>
-      <div>Programming</div>
-      <div>Sports</div>
-      <div>Travel</div>
+      <div onclick="changeSquare('general');">General</div>
+      <div onclick="changeSquare('programming');">Programming</div>
+      <div onclick="changeSquare('sports');">Sports</div>
+      <div onclick="changeSquare('travel');">Travel</div>
     </div>
 
     <div class="chatBody">
-      <h1 class="chatHeader">Welcome to General!</h1>
+      <h1 class="chatHeader" id="chatHeader">Welcome to General!</h1>
       <div class="textBar">
-        <input type="text" name="message" id="textbar" placeholder="Type a message..."/>
-        <button>Send</button>
+        <form id="form">
+          <input type="text" name="message" id="textbar" autocomplete="off" placeholder="Type a message..."/>
+          <button type="submit">Send</button>
+        </form>
       </div>
 
-      <div class="messages">
-        <div class="message">Kyle: Hello,</div>
-        <div class="message">Kyle: World!</div>
-        <div class="message">Me: lorem ipsum dolor sit amet</div>
-        <div class="message">Kyle: this is an example message that is hopefully long enough that it will be broken up into multiple lines as a test.</div>
-        <div class="message">Kyle: this is an example message that is hopefully long enough that it will be broken up into multiple lines as a test.</div>
-        <div class="message">Kyle: this is an example message that is hopefully long enough that it will be broken up into multiple lines as a test.</div>
-        <div class="message">Kyle: this is an example message that is hopefully long enough that it will be broken up into multiple lines as a test.</div>
-        <div class="message">Kyle: this is an example message that is hopefully long enough that it will be broken up into multiple lines as a test.</div>
-        <div class="message">Kyle: this is an example message that is hopefully long enough that it will be broken up into multiple lines as a test.</div>
-        <div class="message">Kyle: this is an example message that is hopefully long enough that it will be broken up into multiple lines as a test.</div>
-        <div class="message">Kyle: this is an example message that is hopefully long enough that it will be broken up into multiple lines as a test.</div>
-        <div class="message">Kyle: this is an example message that is hopefully long enough that it will be broken up into multiple lines as a test.</div>
-        <div class="message">Kyle: this is an example message that is hopefully long enough that it will be broken up into multiple lines as a test.</div>
-        <div class="message">Kyle: this is an example message that is hopefully long enough that it will be broken up into multiple lines as a test.</div>
-        <div class="message">Kyle: this is an example message that is hopefully long enough that it will be broken up into multiple lines as a test.</div>
+      <div class="messages" id="messages">
+        
       </div>
     </div>
   </div>
+
+  <script src="https://cdn.socket.io/4.5.3/socket.io.min.js" integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi" crossorigin="anonymous"></script>
+  <script>
+    var socket = io();
+    var messages = document.getElementById('messages');
+    var form = document.getElementById('form');
+    var input = document.getElementById('textbar');
+    var chatHeader = document.getElementById('chatHeader');
+    var channel = 'general';
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (input.value) {
+        socket.emit('message', {"username": "<%=locals.session.user.username%>", "userid": "<%=locals.session.user.userId%>", "message": input.value, "square": channel});
+        input.value = '';
+      }
+    });
+
+    socket.on("alert", (data) => {
+      var alert = document.getElementById("alert");
+      var alertBox = document.createElement("div");
+      alertBox.id = "alertbox";
+      alertBox.classList.add("alert");
+      alertBox.classList.add("alert-danger");
+      alertBox.setAttribute("role", "alert");
+      alertBox.innerHTML = data.message;
+      alert.appendChild(alertBox);
+    });
+
+    socket.on('message', function(msg) {
+      if (msg.square != channel) {
+        return;
+      }
+      var elt = document.createElement('div');
+      elt.classList.add("message");
+      elt.innerHTML = `<strong>${msg.username}:</strong> ${msg.message}`;
+      messages.appendChild(elt);
+      window.scrollTo(0, document.body.scrollHeight);
+    });
+
+    function changeSquare(square) {
+      channel = square;
+      chatHeader.innerHTML = `Welcome to ${channel[0].toUpperCase() + channel.slice(1)}!`;
+      socket.emit('changeSquare', {"square": square});
+      while (messages.firstChild)
+        messages.removeChild(messages.firstChild);
+    }
+  </script>
 </body>
 </html>
