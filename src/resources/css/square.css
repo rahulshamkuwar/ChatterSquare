@@ -1,0 +1,150 @@
+html, body {
+  padding: 0px;
+  margin: 0px;
+  background-color: #ECEFF1;
+  color: #263238;
+  font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+h1, h2, p {
+  margin: 0px;
+  padding: 0px;
+}
+
+.nav {
+  height: 60px;
+  width: 100%;
+  background-color: #455A64;
+  color: #B0BEC5;
+  font-size: 1.3rem;
+  overflow: hidden;
+}
+
+.image {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  margin-top: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+  background-color: pink;
+}
+
+.nav .left {
+  width: 200px;
+  height: 100%;
+  float: left;
+  margin-left: 15px;
+}
+
+.nav .right {
+  width: 200px;
+  height: 100%;
+  float: right;
+  text-align: right;
+  margin-right: 15px;
+}
+
+.right p, .left p {
+  position: relative;
+  top: -50%;
+  transform: translateY(25%);
+  display: inline-block;
+  height: 100%;
+}
+
+.content {
+  width: 100%;
+  height: calc(100vh - 60px);
+  display: flex;
+  overflow: hidden;
+}
+
+.channels {
+  box-sizing: border-box;
+  font-size: 1.2rem;
+  background-color: #B0BEC5;
+  width: 25%;
+  height: 100vh;
+  max-width: 235px;
+  min-width: 150px;
+}
+
+.channels div {
+  padding: 10px;
+  border-bottom: 4px solid #ECEFF1;
+}
+
+.chatBody {
+  flex-grow: 1;
+  padding: 15px;
+  position: relative;
+}
+
+.chatHeader {
+  font-weight: lighter;
+  border-bottom: 2px solid #263238; 
+}
+
+.message {
+  background-color: #CFD8DC;
+  padding: 10px 12px 10px 12px;
+  border-radius: 15px;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  font-size: 1.1rem;
+}
+
+.message:nth-child(odd) {
+  background-color: #B0BEC5;
+}
+
+.textBar {
+  position: absolute;
+  box-sizing: border-box;
+  bottom: 0px;
+  right: 0px;
+  padding: 12px;
+  width: 100%;
+  background-color: #607D8B;
+}
+
+input {
+  background-color: #B0BEC5;
+  border: none;
+  width: calc(95% - 100px);
+  margin: 0px;
+  padding: 0px;
+  height: 1.8rem;
+  font-size: 1.15rem;
+  color: #263238;
+  border-radius: 12px;
+  text-indent: 8px;
+}
+
+button {
+  color: #263238;
+  margin: 0px;
+  padding: 0px;
+  height: 1.8rem;
+  font-size: 1.15rem;
+  border-radius: 12px;
+  border: none;
+  background-color: #B0BEC5;
+  width: 90px;
+}
+
+.messages {
+  overflow-y: scroll;
+  height: calc(100vh - 170px);
+}
+
+.channels div:hover {
+  cursor: pointer;
+  background-color: #90A4AE;
+}
+
+button div:hover {
+  cursor: pointer;
+  background-color: #90A4AE;
+}
