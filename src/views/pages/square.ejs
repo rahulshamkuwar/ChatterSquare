@@ -10,10 +10,10 @@
   <div class="nav">
     <div class="left">
       <div class="logo image"></div>
-      <p>The Square</p>
+      <p><strong>The Square</strong></p>
     </div>
     <div class="right">
-      <p><%=locals.session.user.username%></p>
+      <p class="name" onclick="window.location.href='./profile'"><%=locals.session.user.username%></p>
       <div class="pfp image"></div>
     </div>
   </div>
@@ -77,7 +77,7 @@
       elt.classList.add("message");
       elt.innerHTML = `<strong>${msg.username}:</strong> ${msg.message}`;
       messages.appendChild(elt);
-      window.scrollTo(0, document.body.scrollHeight);
+      messages.scrollTo(0, messages.scrollHeight);
     });
 
     function changeSquare(square) {

@@ -132,7 +132,6 @@ button {
 .channels div:hover {
   cursor: pointer;
   background-color: #90A4AE;
-  transition: 0.3s;
 }
 
 .image {
@@ -161,5 +160,13 @@ button:hover {
   background-color: #455A64;
   color: #B0BEC5;
   cursor: pointer;
+}
+
+.name:hover {
+  cursor: pointer;
+  color: white;
+}
+
+button, .name, .channels div {
   transition: 0.3s;
 }
