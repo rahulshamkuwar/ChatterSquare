@@ -1,3 +1,5 @@
+const db = require("../services/database");
+
 var messageHistory = [];
 var io;
 
@@ -13,12 +15,20 @@ const connection = (socket) => {
 
 
  socket.on('message', (msg) => {
-   console.log(`[SOCKET ${socket.id[0]} - ${socket.square}] ${msg.text}`);
-   messageHistory.push(msg);
-   if (messageHistory.length >= 80) {
-     messageHistory.shift();
-   }
-   io.emit('message', msg);
+   db.newChat({chatName: socket.square, message: msg.message, userId: msg.userid}).then(() => {
+     console.log(`[SOCKET ${socket.id[0]} - ${socket.square}] ${msg.message}`);
+     messageHistory.push(msg);
+     if (messageHistory.length >= 80) {
+       messageHistory.shift();
+     }
+     io.emit('message', msg);
+    }).catch((err) => {
+      console.log(err);
+      socket.emit("alert", {
+        message: "There was an error sending your message. Please try reloading the page.",
+        errorMessage: err
+      });
+    });
  });
 
  socket.on("changeSquare", (data) => {
@@ -32,9 +42,28 @@ const connection = (socket) => {
 };
 
 function sendMessageHistory(socket) {
- for (var i = 0; i < messageHistory.length; i++) {
-   socket.emit('message', messageHistory[i]);
- }
+  db.getChat({chatName: socket.square}).then(async (chat) => {
+    messageHistory = chat;
+    messageHistory.forEach((message) => {
+      db.getUser({userId: message.userid}).then((user) => {
+        message.username = user.username;
+        message.square = socket.square;
+        socket.emit('message', message);
+      }).catch((err) => {
+        console.log(err);
+        socket.emit("alert", {
+          message: "There was an error retrieving some messages. Please try reloading the page.",
+          errorMessage: err
+        });
+      });
+    });
+  }).catch((err) => {
+    console.log(err);
+    socket.emit("alert", {
+      message: "There was an error retrieving some messages. Please try reloading the page.",
+      errorMessage: err
+    });
+  });
 }
 
 exports.connection = connection;
