@@ -1,9 +1,8 @@
 const db = require("../services/database");
+const bcrypt = require("bcrypt");
 
 exports.profile_get = async (req, res) => {
-  await db.getUser({userId:req.session.user.userId}).then((user) => {
-    req.query.user = user;
-    req.query.user.password = "";
+  await db.getUser({userId:req.session.user.userId}).then(() => {
     req.query.session = req.session;
     req.query.pathname = "/profile";
     res.status(200).render("pages/profile", req.query);
@@ -14,25 +13,33 @@ exports.profile_get = async (req, res) => {
       query: {
         message: "There was an error getting the username from database.",
         error: true,
-        errorMessage: err
+        errorMessage: err,
+        session: req.session
       }
     }));
   });
 };
 
 exports.profile_post_change_password = async (req, res) => {
-  const { password } = req.body;
-  const newHashedPassword = await bcrypt.hash(password, 10);
+  const { oldPassword, newPassword } = req.body;
+  const newHashedPassword = await bcrypt.hash(newPassword, 10);
 
   await db.getUser({userId: req.session.user.userId}).then((user) => {
     const { password: oldHashedPassword } = user;
-    bcrypt.compare(password, oldHashedPassword).then((result) => {
+    bcrypt.compare(oldPassword, oldHashedPassword).then((result) => {
       if (result) {
-        
-        db.updateUser({userId: req.session.user.userId, password: newHashedPassword}).then(() => {
+        db.updateUser({userId: req.session.user.userId, password: newHashedPassword}).then((user) => {
+          req.session.user = {
+            userId: user.userid,
+            username: user.username,
+            isAdmin: user.isadmin,
+            points: user.points,
+            profilePicture: user.profilepicture
+          };
           res.status(200).render("pages/profile", {
             message: "Password successfully changed.",
-            pathname: "/profile"
+            pathname: "/profile",
+            session: req.session
           });
         }).catch((err) => {
           console.log(err);
@@ -52,7 +59,8 @@ exports.profile_post_change_password = async (req, res) => {
         message: "Incorrect password.",
         error: true,
         errorMessage: err,
-        pathname: "/profile"
+        pathname: "/profile",
+        session: req.session
       });
     });
   }).catch((err) => {
@@ -62,14 +70,16 @@ exports.profile_post_change_password = async (req, res) => {
         message: "Incorrect password.",
         error: true,
         errorMessage: err,
-        pathname: "/profile"
+        pathname: "/profile",
+        session: req.session
       });
     } else {
       res.status(500).render("pages/profile", {
         message: "There was an error getting the user from database.",
         error: true,
         errorMessage: err,
-        pathname: "/profile"
+        pathname: "/profile",
+        session: req.session
       });
     }
   });
