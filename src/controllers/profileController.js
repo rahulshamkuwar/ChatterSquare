@@ -1,6 +1,8 @@
 const db = require("../services/database");
 const bcrypt = require("bcrypt");
 const url = require('url');
+const QueryResultError = require("pg-promise").errors.QueryResultError;
+const qrec = require("pg-promise").errors.queryResultErrorCode;
 
 exports.profile_get = async (req, res) => {
   await db.getUser({userId:req.session.user.userId}).then(() => {
@@ -75,7 +77,7 @@ exports.profile_post_change_password = async (req, res) => {
     });
   }).catch((err) => {
     console.log(err);
-    if (err.message === "No data returned from the query.") {
+    if (err instanceof QueryResultError && err.code !== qrec.noData) {
       res.redirect(url.format({
         pathname:"/profile",
         query: {
