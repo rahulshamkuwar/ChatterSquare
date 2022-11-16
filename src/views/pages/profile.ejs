@@ -31,7 +31,6 @@
                     <h3 class="mb-1"><%= user.username %> </h3>
                     <div class="d-flex pt-1">
                         <button type="button" class="btn btn-light btn-sm flex-shrink-1">Change Photo</button>
-                        <button type="button" class="btn btn-light btn-sm flex-shrink-1">Edit Username</button>
                     </div>
                 </div>
               </div>
@@ -57,16 +56,26 @@
         <div class="col col-4">
             <p class="h3">Username</p>
         </div>
-        <div class="col col-8">
+        <div class="col col-6">
             <p class="fs-4"><%= user.username %></p>
+        </div>
+        <div class="col col-2 float-end">
+          <button type="button" class="btn btn-light btn-sm flex-shrink-1" data-bs-toggle="modal" data-bs-target="#edit_username">
+            Edit Username
+          </button>
         </div>
     </div>
     <div class="row">
         <div class="col col-4">
-            <p class="h3">Name?</p>
+            <p class="h3">Password</p>
         </div>
-        <div class="col col-8">
-            <p class="fs-4">[Name]</p>
+        <div class="col col-6">
+            <p class="fs-4">*****</p>
+        </div>
+        <div class="col col-2">
+          <button type="button" class="btn btn-light btn-sm flex-shrink-1" data-bs-toggle="modal" data-bs-target="#change_password">
+            Change Password
+          </button>
         </div>
     </div>
 
@@ -74,12 +83,25 @@
     <div style="background-color: #f8f9fa;">
         <p class="h5 border-bottom p-2">Points Information</p>
     </div>
-    <div class="row row-cols-3 d-flex justify-content-left align-items-center h-100">
-      <div class="col">
-        <!-- TO-DO: change card to have even sizing no matter the text inside -->
-        <div class="card">
+    <div class="row row-cols-3 d-flex">
+      <div class="col pb-3">
+        <!-- TO-DO: postion button at the bottom, update perk details -->
+        <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title">Title</h5>
+            <h5 class="card-title">Custom Name Color</h5>
+            <p class="card-text">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Vestibulum venenatis, libero posuere scelerisque mollis, nisi lectus pharetra lectus, 
+                id tincidunt libero leo ut ex.
+            </p>
+            <a href="#" class="btn btn-primary float-bottom">Purchase Perk</a>
+          </div>
+        </div>
+      </div>
+      <div class="col pb-3">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Custom Message Border</h5>
             <p class="card-text">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 Vestibulum venenatis, libero posuere scelerisque mollis, nisi lectus pharetra lectus, 
@@ -89,35 +111,98 @@
           </div>
         </div>
       </div>
-      <div class="col">
-        <div class="card">
+      <div class="col pb-3">
+        <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title">Title</h5>
-            <p class="card-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Vestibulum venenatis, libero posuere scelerisque mollis, nisi lectus pharetra lectus, 
-                id tincidunt libero leo ut ex.
-            </p>
-            <a href="#" class="btn btn-primary">Purchase Perk</a>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Title</h5>
+            <h5 class="card-title">Custom Message Font</h5>
             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
             <a href="#" class="btn btn-primary">Purchase Perk</a>
           </div>
         </div>
       </div>
-      <div class="col">
-        <div class="card">
+      <div class="col pb-3">
+        <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title">Title</h5>
+            <h5 class="card-title">Animated Profile Picture</h5>
             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
             <a href="#" class="btn btn-primary">Purchase Perk</a>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal fade" id="change_password" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Change Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+              <div class="col-5">
+                <label for="password" class="col-form-label">Old Password</label>
+              </div>
+              <div class="col-7">
+                <input type="password" id="password" class="form-control">
+              </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-5">
+              <label for="password" class="col-form-label">New Password</label>
+            </div>
+            <div class="col-7">
+              <input type="password" id="password" class="form-control">
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-5">
+              <label for="confirm_password" class="col-form-label">Confirm New Password</label>
+            </div>
+            <div class="col-7">
+              <input type="password" id="confirm_password" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Username Modal -->
+  <div class="modal fade" id="edit_username" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Username</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-4">
+              <label for="username" class="col-form-label">Old Username</label>
+            </div>
+            <div class="col-8">
+              <input type="username" id="username" class="form-control">
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-4">
+              <label for="username" class="col-form-label">New Username</label>
+            </div>
+            <div class="col-8">
+              <input type="username" id="username" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>
