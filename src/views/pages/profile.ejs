@@ -1,213 +1,302 @@
 <%- include ('../partials/header') %>
-<%- include ('../partials/nav-bar') %>
+  <%- include ('../partials/nav-bar') %>
 
-<main>
-  <div class="container" style="background-color: #f8f9fa;">
-    <div class="col m-2"><%- include ('../partials/alert') %></div>
-    <div class="row">
-        <div class="col">
-            <p class="h5 p-2">Your Profile</p>
+    <main>
+      <div class="container">
+        <div class="col my-2">
+          <%- include ('../partials/alert') %>
         </div>
-        <div class="col">
-            <a href="/logout" class="nav-link active float-end p-2">Logout</a>
+        <div style="background-color: #f8f9fa;">
+          <p class="h5 border-bottom p-2 mt-2">Profile Information</p>
         </div>
-    </div>
-  </div>
-  
-  <div class="container">
-    <% const user = locals.session.user; %>
-    <!-- Profile Picture and Points Summary -->
-    <div class="row d-flex justify-content-center align-items-center h-75">
-        <div class="col col-md-6">
-          <div class="card">
-            <div class="card-body p-4">
-              <div class="d-flex">
-                <div class="flex-shrink-0">
-                    <img src="/resources/img/Generic-Profile-1600x1600.png" 
-                    alt="Generic profile picture" class="rounded-circle img-fluid" 
-                    style="width: 180px; border-radius: 10px;">
-                </div>
-                <div class="flex-grow-1 ms-3">
-                    <h3 class="mb-1"><%= user.username %> </h3>
-                    <div class="d-flex pt-1">
-                        <button type="button" class="btn btn-light btn-sm flex-shrink-1">Change Photo</button>
+      </div>
+
+      <div class="container">
+        <% const user=locals.session.user; %>
+          <!-- Profile Picture and Points Summary -->
+          <div class="row d-flex justify-content-center align-items-center h-75">
+            <div class="col col-md-6">
+              <div class="card">
+                <div class="card-body p-4">
+                  <div class="d-flex">
+                    <div class="flex-shrink-0">
+                      <img src="/resources/img/Generic-Profile-1600x1600.png" alt="Generic profile picture"
+                        class="rounded-circle img-fluid" style="width: 180px; border-radius: 10px;">
                     </div>
+                    <div class="flex-grow-1 ms-3">
+                      <h3 id="username_text" class="mb-1">
+                        <%= user.username %>
+                      </h3>
+                      <div class="row d-flex justify-content-center align-items-center h-20">
+                        <div class="col col-4 float-end">
+                          <button type="button" class="btn btn-light btn-sm flex-shrink-1">Change Photo</button>
+                        </div>
+                        <div class="col col-4 float-end">
+                          <button type="button" class="btn btn-light btn-sm flex-shrink-1" data-bs-toggle="modal"
+                            data-bs-target="#edit_username">
+                            Change Username
+                          </button>
+                        </div>
+                        <div class="col col-4 float-end">
+                          <button type="button" class="btn btn-light btn-sm flex-shrink-1" data-bs-toggle="modal"
+                            data-bs-target="#change_password">
+                            Change Password
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col col-md-6">
+              <div class="d-flex justify-content-end float-end py-1">
+                <div>
+                  <p class="mb-1 h5 text-end">You have</p>
+                  <p class="h1">
+                    <%= user.points %>
+                  </p>
+                  <p class="mb-1 h5 text-end">points.</p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col col-md-6">
-          <div class="d-flex justify-content-end float-end py-1">
-            <div>
-                <p class="mb-1 h5 text-end">You have</p>
-                <p class="h1"><%= user.points %></p>
-                <p class="mb-1 h5 text-end">points.</p>
-            </div>
-          </div>
-        </div>
-    </div>
 
-    <!-- Profile Information -->
-    <div style="background-color: #f8f9fa;">
-        <p class="h5 border-bottom p-2">Profile Information</p>
-    </div>
-    <div class="row d-flex justify-content-center align-items-center h-20">
-        <div class="col col-4">
-            <p class="h3">Username</p>
-        </div>
-        <div class="col col-6">
-            <p class="fs-4"><%= user.username %></p>
-        </div>
-        <div class="col col-2 float-end">
-          <button type="button" class="btn btn-light btn-sm flex-shrink-1" data-bs-toggle="modal" data-bs-target="#edit_username">
-            Edit Username
-          </button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col col-4">
-            <p class="h3">Password</p>
-        </div>
-        <div class="col col-6">
-            <p class="fs-4">*****</p>
-        </div>
-        <div class="col col-2">
-          <button type="button" class="btn btn-light btn-sm flex-shrink-1" data-bs-toggle="modal" data-bs-target="#change_password">
-            Change Password
-          </button>
-        </div>
-    </div>
-
-    <!-- Points System/Redeem -->
-    <div style="background-color: #f8f9fa;">
-        <p class="h5 border-bottom p-2">Points Information</p>
-    </div>
-    <div class="row row-cols-3 d-flex">
-      <div class="col pb-3">
-        <!-- TO-DO: postion button at the bottom, update perk details -->
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">Custom Name Color</h5>
-            <p class="card-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Vestibulum venenatis, libero posuere scelerisque mollis, nisi lectus pharetra lectus, 
-                id tincidunt libero leo ut ex.
-            </p>
-            <a href="#" class="btn btn-primary float-bottom">Purchase Perk</a>
+          <!-- Points System/Redeem -->
+          <div style="background-color: #f8f9fa;">
+            <p class="h5 border-bottom p-2 mt-2">Points Information</p>
           </div>
-        </div>
-      </div>
-      <div class="col pb-3">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">Custom Message Border</h5>
-            <p class="card-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Vestibulum venenatis, libero posuere scelerisque mollis, nisi lectus pharetra lectus, 
-                id tincidunt libero leo ut ex.
-            </p>
-            <a href="#" class="btn btn-primary">Purchase Perk</a>
-          </div>
-        </div>
-      </div>
-      <div class="col pb-3">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">Custom Message Font</h5>
-            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            <a href="#" class="btn btn-primary">Purchase Perk</a>
-          </div>
-        </div>
-      </div>
-      <div class="col pb-3">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">Animated Profile Picture</h5>
-            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            <a href="#" class="btn btn-primary">Purchase Perk</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Change Password Modal -->
-  <div class="modal fade" id="change_password" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Change Password</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row g-3">
-              <div class="col-5">
-                <label for="password" class="col-form-label">Old Password</label>
+          <div class="row row-cols-3 d-flex">
+            <div class="col pb-3">
+              <!-- TO-DO: postion button at the bottom, update perk details -->
+              <div class="card h-100">
+                <div class="card-body">
+                  <h5 class="card-title">Custom Name Color</h5>
+                  <p class="card-text">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Vestibulum venenatis, libero posuere scelerisque mollis, nisi lectus pharetra lectus,
+                    id tincidunt libero leo ut ex.
+                  </p>
+                  <a href="#" class="btn btn-primary float-bottom">Purchase Perk</a>
+                </div>
               </div>
-              <div class="col-7">
-                <input type="password" id="password" class="form-control">
+            </div>
+            <div class="col pb-3">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h5 class="card-title">Custom Message Border</h5>
+                  <p class="card-text">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Vestibulum venenatis, libero posuere scelerisque mollis, nisi lectus pharetra lectus,
+                    id tincidunt libero leo ut ex.
+                  </p>
+                  <a href="#" class="btn btn-primary">Purchase Perk</a>
+                </div>
               </div>
+            </div>
+            <div class="col pb-3">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h5 class="card-title">Custom Message Font</h5>
+                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                  <a href="#" class="btn btn-primary">Purchase Perk</a>
+                </div>
+              </div>
+            </div>
+            <div class="col pb-3">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h5 class="card-title">Animated Profile Picture</h5>
+                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                  <a href="#" class="btn btn-primary">Purchase Perk</a>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="row g-3">
-            <div class="col-5">
-              <label for="password" class="col-form-label">New Password</label>
+      </div>
+
+      <!-- Change Password Modal -->
+      <div class="modal fade" id="change_password" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Change Password</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="col-7">
-              <input type="password" id="password" class="form-control">
+            <div class="modal-body">
+              <form id="password_form" action="/profile/change_password" method="post" class="needs-validation" novalidate>
+                <div class="row g-3 mb-2">
+                  <div class="col-5">
+                    <label for="old_password" class="col-form-label">Old Password</label>
+                  </div>
+                  <div class="col-7">
+                    <input type="password" id="old_password" class="form-control" name="oldPassword" required>
+                    <div class="invalid-feedback">
+                      Please enter old password.
+                    </div>
+                  </div>
+                </div>
+                <div class="row g-3 mb-2">
+                  <div class="col-5">
+                    <label for="new_password" class="col-form-label">New Password</label>
+                  </div>
+                  <div class="col-7">
+                    <input type="password" id="new_password" class="form-control" name="newPassword" onkeyup="validatePassword()" required>
+                    <div class="invalid-feedback">
+                      Please choose a password.
+                    </div>
+                  </div>
+                </div>
+                <div class="row g-3">
+                  <div class="col-5">
+                    <label for="confirm_password" class="col-form-label">Confirm New Password</label>
+                  </div>
+                  <div class="col-7">
+                    <input type="password" id="confirm_password" class="form-control" name="confirmPassword" onkeyup="validatePassword()">
+                    <div id="match_password" hidden>
+                      Passwords don't match.
+                    </div>
+                    <div id="empty_password" hidden>
+                      This field cannot be empty.
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="submit button" form="password_form" class="btn btn-primary">Save changes</button>
             </div>
           </div>
-          <div class="row g-3">
-            <div class="col-5">
-              <label for="confirm_password" class="col-form-label">Confirm New Password</label>
-            </div>
-            <div class="col-7">
-              <input type="password" id="confirm_password" class="form-control">
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Edit Username Modal -->
-  <div class="modal fade" id="edit_username" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Edit Username</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row g-3">
-            <div class="col-4">
-              <label for="username" class="col-form-label">Old Username</label>
+      <!-- Edit Username Modal -->
+      <div class="modal fade" id="edit_username" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Edit Username</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="col-8">
-              <input type="username" id="username" class="form-control">
+            <div class="modal-body">
+              <form id="username_form" action="" method="post" class="needs-validation" novalidate>
+                <div class="row g-3 mb-2">
+                  <div class="col-4">
+                    <label for="username" class="col-form-label">Old Username</label>
+                  </div>
+                  <div class="col-8">
+                    <input type="text" id="old_username" class="form-control" required onkeyup="validateUsername()">
+                    <div id="empty_old_username" hidden>
+                      Please enter old username.
+                    </div>
+                    <div id="match_old_username" hidden>
+                      Does not match current username.
+                    </div>
+                  </div>
+                </div>
+                <div class="row g-3">
+                  <div class="col-4">
+                    <label for="username" class="col-form-label">New Username</label>
+                  </div>
+                  <div class="col-8">
+                    <input type="text" id="new_username" class="form-control" required onkeyup="validateUsername()">
+                    <div id="empty_new_username" hidden>
+                      Please enter new username.
+                    </div>
+                    <div id="match_new_username" hidden>
+                      Usernames are the same.
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="submit button" form="username_form" class="btn btn-primary">Save changes</button>
             </div>
           </div>
-          <div class="row g-3">
-            <div class="col-4">
-              <label for="username" class="col-form-label">New Username</label>
-            </div>
-            <div class="col-8">
-              <input type="username" id="username" class="form-control">
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
-    </div>
-  </div>
-    
-</main>
+      <script type="text/javascript">
+        function validatePassword() {
+          const password = document.getElementById("new_password");
+          const confirm_password = document.getElementById("confirm_password");
+          const match = document.getElementById("match_password");
+          const empty = document.getElementById("empty_password");
+          if (password.value !== confirm_password.value) {
+            confirm_password.setCustomValidity("Passwords don't match");
+            match.classList.add("invalid-feedback");
+            match.hidden = false;
+            empty.classList.remove("invalid-feedback");
+            empty.hidden = true;
+          } else if (confirm_password.value === "") {
+            confirm_password.setCustomValidity("This field cannot be empty.");
+            empty.classList.add("invalid-feedback");
+            empty.hidden = false;
+            match.classList.remove("invalid-feedback");
+            match.hidden = true;
+          } else {
+            confirm_password.setCustomValidity("");
+          }
+        };
+        
+        function validateUsername() {
+          const user = document.getElementById("username_text").innerText;
+          const old_username = document.getElementById("old_username");
+          const new_username = document.getElementById("new_username");
+          const oldMatch = document.getElementById("match_old_username");
+          const oldEmpty = document.getElementById("empty_old_username");
+          const newMatch = document.getElementById("match_new_username");
+          const newEmpty = document.getElementById("empty_new_username");
 
-<%- include ('../partials/footer') %>
+          if (old_username.value === "") {
+            old_username.setCustomValidity("Empty username");
+            oldMatch.classList.remove("invalid-feedback");
+            oldMatch.hidden = true;
+            oldEmpty.classList.add("invalid-feedback");
+            oldEmpty.hidden = false;
+          } else if (old_username.value !== user) {
+            old_username.setCustomValidity("Not current username");
+            oldMatch.classList.add("invalid-feedback");
+            oldMatch.hidden = false;
+            oldEmpty.classList.remove("invalid-feedback");
+            oldEmpty.hidden = true;
+          } else {
+            old_username.setCustomValidity("");
+          }
+          
+          if (new_username.value === "") {
+            new_username.setCustomValidity("Usernames match");
+            newMatch.classList.remove("invalid-feedback");
+            newMatch.hidden = true;
+            newEmpty.classList.add("invalid-feedback");
+            newEmpty.hidden = false;
+          } else if (new_username.value === old_username.value) {
+            new_username.setCustomValidity("Usernames match");
+            newMatch.classList.add("invalid-feedback");
+            newMatch.hidden = false;
+            newEmpty.classList.remove("invalid-feedback");
+            newEmpty.hidden = true;
+          } else {
+            new_username.setCustomValidity("");
+          }
+        };
+
+        let forms = document.querySelectorAll('.needs-validation');
+        forms.forEach((form) => {
+          form.addEventListener('submit', (event) => {
+            if (!form.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            if (form.id === "password_form") {
+              validatePassword();
+            } else {
+              validateUsername();
+            }
+            form.classList.add('was-validated');
+          }, false);
+        });
+      </script>
+    </main>
+
+    <%- include ('../partials/footer') %>

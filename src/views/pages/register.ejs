@@ -58,8 +58,6 @@
             const confirm_password = document.getElementById("confirm_password");
             const match = document.getElementById("match_password");
             const empty = document.getElementById("empty_password");
-            console.log(password.value);
-            console.log(confirm_password.value);
             if (password.value !== confirm_password.value) {
               confirm_password.setCustomValidity("Passwords don't match");
               match.classList.add("invalid-feedback");
@@ -73,7 +71,6 @@
               match.classList.remove("invalid-feedback");
               match.hidden = true;
             } else {
-              console.log("resetting validity");
               confirm_password.setCustomValidity("");
             }
           }
