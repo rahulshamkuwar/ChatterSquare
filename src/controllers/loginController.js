@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const url = require('url');
 const db = require("../services/database");
+const QueryResultError = require("pg-promise").errors.QueryResultError;
+const qrec = require("pg-promise").errors.queryResultErrorCode;
 
 exports.login_get = (req, res) => {
   req.query.session = req.session;
@@ -37,7 +39,7 @@ exports.login_post = async (req, res) => {
     });
   }).catch((err) => {
     console.log(err);
-    if (err.message === "No data returned from the query.") {
+    if (err instanceof QueryResultError && err.code !== qrec.noData) {
       // Even though format is deprecated, it still works fine and there is no other better alternative. Refer to https://github.com/nodejs/node/issues/25099
       res.redirect(url.format({
         pathname:"/register",
