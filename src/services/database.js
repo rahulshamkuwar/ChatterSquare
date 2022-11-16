@@ -105,7 +105,7 @@ exports.deleteUser = async ({userId, username}) => {
 // Returns the chat object.
 // Does not handle errors.
 exports.deleteChat = async ({chatName, messageId}) => {
-  await db.task(`delete${chatName}Chat-${messageId}`, async task => {
+  return await db.task(`delete${chatName}Chat-${messageId}`, async task => {
     return await task.one(`DELETE FROM ${chatName}chat WHERE messageId = $1 RETURNING *;`, [messageId]);
   });
 };
@@ -114,40 +114,53 @@ exports.deleteChat = async ({chatName, messageId}) => {
 // Returns user object.
 // Does not handle errors.
 exports.updateUser = async ({userId, username, password, isAdmin, points, profilePicture}) => {
-  const query = "UPDATE users SET ";
-  var comma = "";
-  var updated = false;
+  let query = "UPDATE users SET ";
+  let comma = "";
+  let updated = false;
+  let count = 1;
+  let values = [];
   if (username) {
-    query += `username = ${username}`;
+    query += `username = $${count}`;
     comma = ", ";
     updated = true;
+    count++;
+    values.push(username);
   }
   if (password) {
-    query += comma + `password = ${password}`;
+    query += comma + `password = $${count}`;
     comma = ", ";
     updated = true;
+    count++;
+    values.push(password);
   }
   if (isAdmin) {
-    query += comma + `isAdmin = ${isAdmin}`;
+    query += comma + `isAdmin = $${count}`;
     comma = ", ";
     updated = true;
+    count++;
+    values.push(isAdmin);
   }
   if (points) {
-    query += comma + `points = ${points}`;
+    query += comma + `points = $${count}`;
     comma = ", ";
     updated = true;
+    count++;
+    values.push(points);
   }
   if (profilePicture) {
-    query += comma + `profilePicture = ${profilePicture}`;
+    query += comma + `profilePicture = $${count}`;
     comma = ", ";
     updated = true;
+    count++;
+    values.push(profilePicture);
   }
   if (!updated) {
     throw Error("Did not pass values to update perks!");
   }
-  query += ` WHERE userId = ${userId} RETURNING *;`;
-  await db.task(`updateUser-${userId}`, async task => {
-    return await task.one(query);
+  query += ` WHERE userId = $${count} RETURNING *;`;
+  values.push(userId);
+  return await db.task(`updateUser-${userId}`, async task => {
+    return await task.one(query, values);
   });
 };
 
@@ -155,33 +168,44 @@ exports.updateUser = async ({userId, username, password, isAdmin, points, profil
 // Returns an object with all perks.
 // Does not handle errors.
 exports.updatePerks = async ({userId, font, border, profilePicture, nameColor}) => {
-  const query = "UPDATE userPerks SET ";
-  var comma = "";
-  var updated = false;
+  let query = "UPDATE userPerks SET ";
+  let comma = "";
+  let updated = false;
+  let count = 1;
+  let values = [];
   if (font) {
-    query += `font = ${font}`;
+    query += `font = $${count}`;
     comma = ", ";
     updated = true;
+    count++;
+    values.push(font);
   }
   if (border) {
-    query += comma + `border = ${border}`;
+    query += comma + `border = $${count}`;
     comma = ", ";
     updated = true;
+    count++;
+    values.push(border);
   }
   if (profilePicture) {
-    query += comma + `profilePicture = ${profilePicture}`;
+    query += comma + `profilePicture = $${count}`;
     comma = ", ";
     updated = true;
+    count++;
+    values.push(profilePicture);
   }
   if (nameColor) {
-    query += comma + `nameColor = ${nameColor}`;
+    query += comma + `nameColor = $${count}`;
+    comma = ", ";
     updated = true;
+    count++;
+    values.push(nameColor);
   }
   if (!updated) {
     throw Error("Did not pass values to update perks!");
   }
-  query += ` WHERE userId = ${userId} RETURNING *;`;
-  await db.task(`updatePerks-${userId}`, async task => {
-    return await task.one(query);
+  query += ` WHERE userId = $${count} RETURNING *;`;
+  return await db.task(`updatePerks-${userId}`, async task => {
+    return await task.one(query, values);
   });
 };
