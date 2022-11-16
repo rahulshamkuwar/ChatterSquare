@@ -1,5 +1,6 @@
 const db = require("../services/database");
 const bcrypt = require("bcrypt");
+const url = require('url');
 
 exports.profile_get = async (req, res) => {
   await db.getUser({userId:req.session.user.userId}).then(() => {
@@ -36,51 +37,66 @@ exports.profile_post_change_password = async (req, res) => {
             points: user.points,
             profilePicture: user.profilepicture
           };
-          res.status(200).render("pages/profile", {
-            message: "Password successfully changed.",
-            pathname: "/profile",
-            session: req.session
-          });
+          res.redirect(url.format({
+            pathname:"/profile",
+            query: {
+              message: "Password successfully changed.",
+              pathname: "/profile",
+              session: req.session
+            }
+          }));
         }).catch((err) => {
           console.log(err);
-          res.status(500).render("pages/profile", {
-            message: "There was an error inserting to database.",
-            error: true,
-            errorMessage: err,
-            pathname: "/profile"
-          });
+          res.redirect(url.format({
+            pathname:"/profile",
+            query: {
+              message: "There was an error inserting to database.",
+              error: true,
+              errorMessage: err,
+              pathname: "/profile"
+            }
+          }));
         });
       } else {
         throw Error("Incorrect password.");
       }
     }).catch(err => {
       console.log(err);
-      res.status(400).render("pages/profile", {
-        message: "Incorrect password.",
-        error: true,
-        errorMessage: err,
-        pathname: "/profile",
-        session: req.session
-      });
+      res.redirect(url.format({
+        pathname:"/profile",
+        query: {
+          message: "Incorrect password.",
+          error: true,
+          errorMessage: err,
+          pathname: "/profile",
+          session: req.session
+        }
+      }));
     });
   }).catch((err) => {
     console.log(err);
     if (err.message === "No data returned from the query.") {
-      res.status(400).render("pages/profile", {
-        message: "Incorrect password.",
-        error: true,
-        errorMessage: err,
-        pathname: "/profile",
-        session: req.session
-      });
+      res.redirect(url.format({
+        pathname:"/profile",
+        query: {
+          message: "Incorrect password.",
+          error: true,
+          errorMessage: err,
+          pathname: "/profile",
+          session: req.session
+        }
+      }));
     } else {
-      res.status(500).render("pages/profile", {
-        message: "There was an error getting the user from database.",
-        error: true,
-        errorMessage: err,
-        pathname: "/profile",
-        session: req.session
-      });
+      res.redirect(url.format({
+        pathname:"/profile",
+        query: {
+          message: "There was an error getting the user from database.",
+          error: true,
+          errorMessage: err,
+          pathname: "/profile",
+          session: req.session
+        }
+      }));
     }
   });
 };
