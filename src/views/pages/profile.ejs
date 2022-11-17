@@ -251,7 +251,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form id="picture_form" action="" method="post" class="needs-validation" novalidate>
+            <form id="picture_form" action="/profile/change_profile_picture" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
               <div class="mb-3">
                 <label for="formFile" class="form-label">New Profile Picture</label>
                 <input class="form-control" type="file" id="formFile" name="profilePicture" accept="image/png, image/jpeg" required>

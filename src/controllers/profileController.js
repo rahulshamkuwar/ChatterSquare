@@ -100,3 +100,8 @@ exports.profile_post_change_password = async (req, res) => {
     }
   });
 };
+
+exports.profile_post_change_profile_picture = async (req, res) => {
+  const profilePicture  = req.file;
+  console.log(profilePicture);
+};
