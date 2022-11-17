@@ -100,3 +100,47 @@ exports.profile_post_change_password = async (req, res) => {
     }
   });
 };
+
+exports.profile_post_change_username = async (req, res) => {
+  const { newUsername } = req.body;
+  db.updateUser({userId: req.session.user.userId, username: newUsername}).then((user) => {
+    req.session.user = {
+      userId: user.userid,
+      username: user.username,
+      isAdmin: user.isadmin,
+      points: user.points,
+      profilePicture: user.profilepicture
+    };
+    res.redirect(url.format({
+      pathname:"/profile",
+      query: {
+        message: "Username successfully changed.",
+        pathname: "/profile",
+        session: req.session
+      }
+    }));
+  }).catch((err) => {
+    console.log(err);
+    if (err.constraint === "users_username_key") {
+      res.redirect(url.format({
+        pathname:"/profile",
+        query: {
+          message: "This user already exists, please use a new username.",
+          error: true,
+          errorMessage: err,
+          pathname: "/profile"
+        }
+      }));
+    } else {
+      res.redirect(url.format({
+        pathname:"/profile",
+        query: {
+          message: "There was an error inserting to database.",
+          error: true,
+          errorMessage: err,
+          pathname: "/profile"
+        }
+      }));
+    }
+  });
+};

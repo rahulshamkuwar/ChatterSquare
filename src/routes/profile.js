@@ -8,4 +8,6 @@ router.get('/', profile_controller.profile_get);
 
 router.post('/change_password', profile_controller.profile_post_change_password);
 
+router.post('/change_username', profile_controller.profile_post_change_username);
+
 module.exports = router;
