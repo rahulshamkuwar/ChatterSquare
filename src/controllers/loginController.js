@@ -39,7 +39,7 @@ exports.login_post = async (req, res) => {
     });
   }).catch((err) => {
     console.log(err);
-    if (err instanceof QueryResultError && err.code !== qrec.noData) {
+    if (err instanceof QueryResultError && err.code === qrec.noData) {
       // Even though format is deprecated, it still works fine and there is no other better alternative. Refer to https://github.com/nodejs/node/issues/25099
       res.redirect(url.format({
         pathname:"/register",

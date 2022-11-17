@@ -77,7 +77,7 @@ exports.profile_post_change_password = async (req, res) => {
     });
   }).catch((err) => {
     console.log(err);
-    if (err instanceof QueryResultError && err.code !== qrec.noData) {
+    if (err instanceof QueryResultError && err.code === qrec.noData) {
       res.redirect(url.format({
         pathname:"/profile",
         query: {
