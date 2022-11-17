@@ -45,7 +45,7 @@ exports.getPerks = async ({userId}) => {
 exports.newUser = async ({username, password, isAdmin = false, points = 0, profilePicture = ""}) => {
   await db.task(`newUser-${username}`, async task => {
     const {userid} = await task.one("INSERT INTO users(username, password, isAdmin, points, profilePicture) VALUES ($1, $2, $3, $4, $5) RETURNING userId;", [username, password, isAdmin, points, profilePicture]);
-    await task.none("INSERT INTO userPerks(userId, font, border, profilePicture, nameColor) VALUES ($1, $2, $3, $4, $5);", [userid, "", "", "", ""]);
+    await task.none("INSERT INTO userPerks(userId, font, border, profilePicture, nameColor) VALUES ($1, $2, $3, $4, $5);", [userid, "", "", "resources/img/Generic-Profile-1600x1600.png", ""]);
   });
 };
 

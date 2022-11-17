@@ -102,6 +102,33 @@ exports.profile_post_change_password = async (req, res) => {
 };
 
 exports.profile_post_change_profile_picture = async (req, res) => {
-  const profilePicture  = req.file;
-  console.log(profilePicture);
+  const { profilePicture }  = req.body;
+
+  const user = await db.updateUser({userId: req.session.user.userId, profilePicture: profilePicture}).catch((err) => {
+    console.log(err);
+    res.redirect(url.format({
+      pathname:"/profile",
+      query: {
+        message: "There was an error updating profile picture.",
+        error: true,
+        errorMessage: err,
+        pathname: "/profile"
+      }
+    }));
+  });
+  req.session.user = {
+    userId: user.userid,
+    username: user.username,
+    isAdmin: user.isadmin,
+    points: user.points,
+    profilePicture: user.profilepicture
+  };
+  res.redirect(url.format({
+    pathname:"/profile",
+    query: {
+      message: "Successfully changed profile picture",
+      pathname: "/profile",
+      session: req.session
+    }
+  }));
 };
