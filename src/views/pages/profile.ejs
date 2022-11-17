@@ -242,6 +242,32 @@
       </div>
     </div>
 
+    <!-- Change Profile Picture -->
+    <div class="modal fade" id="change_picture" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Change Profile Picture</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="picture_form" action="" method="post" class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="formFile" class="form-label">New Profile Picture</label>
+                <input class="form-control" type="file" id="formFile" name="profilePicture" accept="image/png, image/jpeg" required>
+                <div class="invalid-feedback">
+                  Please upload an image.
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit button" form="picture_form" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script type="text/javascript">
       function validatePassword() {
         const password = document.getElementById("new_password");
@@ -305,6 +331,7 @@
           new_username.setCustomValidity("");
         }
       };
+      
       let forms = document.querySelectorAll('.needs-validation');
       forms.forEach((form) => {
         form.addEventListener('submit', (event) => {
