@@ -19,7 +19,7 @@
               <div class="card-body p-4">
                 <div class="d-flex">
                   <div class="flex-shrink-0">
-                    <img src="/resources/img/Generic-Profile-1600x1600.png" alt="Generic profile picture"
+                    <img id="profile_picture_img" src="<%- user.profilePicture %>" alt="Profile Picture"
                       class="rounded-circle img-fluid" style="width: 180px; border-radius: 10px;">
                   </div>
                   <div class="flex-grow-1 ms-3">
@@ -242,6 +242,53 @@
       </div>
     </div>
 
+    <!-- Change Profile Picture -->
+    <div class="modal fade" id="change_picture" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Change Profile Picture</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- <form id="picture_form" action="/profile/change_profile_picture" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+              <div class="mb-3">
+                <label for="formFile" class="form-label">New Profile Picture</label>
+                <input class="form-control" type="file" id="formFile" name="imageFile" accept="image/png, image/jpeg" required>
+                <div class="invalid-feedback">
+                  Please upload an image.
+                </div>
+              </div>
+              <input class="form-control" type="text" name="profilePicture" id="profilePicture" form="picture_form">
+            </form> -->
+            <form id="picture_form" action="/profile/change_profile_picture" method="post" class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="formFile" class="form-label">New Profile Picture</label>
+                <input class="form-control" type="file" id="formFile" name="imageFile" accept="image/png, image/jpeg" required>
+                <div class="invalid-feedback">
+                  Please upload an image.
+                </div>
+              </div>
+              <div class="row g-3 mb-2">
+                <div class="col-5">
+                  <label for="profile_picture" class="col-form-label" hidden>ProfilePic</label>
+                </div>
+                <div class="col-7">
+                  <input type="text" id="profile_picture" class="form-control" name="profilePicture" hidden>
+                  <div class="invalid-feedback">
+                    Please enter old password.
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit button" form="picture_form" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script type="text/javascript">
       function validatePassword() {
         const password = document.getElementById("new_password");
@@ -305,6 +352,7 @@
           new_username.setCustomValidity("");
         }
       };
+      
       let forms = document.querySelectorAll('.needs-validation');
       forms.forEach((form) => {
         form.addEventListener('submit', (event) => {
@@ -314,10 +362,21 @@
           }
           if (form.id === "password_form") {
             validatePassword();
-          } else {
+          } else if (form.id === "username_form") {
             validateUsername();
           }
           form.classList.add('was-validated');
+          if (form.id === "picture_form") {
+            event.preventDefault();
+            const file = document.querySelector('input[type=file]').files[0];
+            const reader = new FileReader();
+            reader.addEventListener("load", () => {
+              console.log(reader.result);
+              profile_picture.value = reader.result;
+              form.submit();
+            },false);
+            reader.readAsDataURL(file);
+          }
         }, false);
       });
     </script>

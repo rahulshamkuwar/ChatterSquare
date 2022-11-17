@@ -42,7 +42,7 @@ exports.getPerks = async ({userId}) => {
 // `isAdmin`, `points`, and `profilePicture` are not required.
 // Returns void.
 // Does not handle errors.
-exports.newUser = async ({username, password, isAdmin = false, points = 0, profilePicture = ""}) => {
+exports.newUser = async ({username, password, isAdmin = false, points = 0, profilePicture = "/resources/img/Generic-Profile-1600x1600.png"}) => {
   await db.task(`newUser-${username}`, async task => {
     const {userid} = await task.one("INSERT INTO users(username, password, isAdmin, points, profilePicture) VALUES ($1, $2, $3, $4, $5) RETURNING userId;", [username, password, isAdmin, points, profilePicture]);
     await task.none("INSERT INTO userPerks(userId, font, border, profilePicture, nameColor) VALUES ($1, $2, $3, $4, $5);", [userid, "", "", "", ""]);

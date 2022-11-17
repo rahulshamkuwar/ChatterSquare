@@ -26,7 +26,7 @@
                         </li>
                         <!-- Profile Picture -->
                         <li>
-                            <img src="/resources/img/Generic-Profile-1600x1600.png" alt="pfp" width="30" height="30">
+                            <img src="<%- locals.session.user.profilePicture %>" alt="pfp" width="30" height="30">
                         </li>
                     <% } else { %>
                         <li class="nav-item">
