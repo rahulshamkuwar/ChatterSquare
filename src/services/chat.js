@@ -1,4 +1,6 @@
 const db = require("../services/database");
+const QueryResultError = require("pg-promise").errors.QueryResultError;
+const qrec = require("pg-promise").errors.queryResultErrorCode;
 
 var messageHistory = [];
 var io;
@@ -58,11 +60,13 @@ function sendMessageHistory(socket) {
       });
     });
   }).catch((err) => {
-    console.log(err);
-    socket.emit("alert", {
-      message: "There was an error retrieving some messages. Please try reloading the page.",
-      errorMessage: err
-    });
+    if (err instanceof QueryResultError && err.code !== qrec.noData) {
+      console.log(err);
+      socket.emit("alert", {
+        message: "There was an error retrieving some messages. Please try reloading the page.",
+        errorMessage: err
+      });
+    }
   });
 }
 
