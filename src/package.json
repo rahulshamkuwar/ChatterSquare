@@ -1,7 +1,7 @@
 {
   "name": "chattersquare",
   "main": "index.js",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "dependencies": {
     "axios": "^1.1.3",
     "bcrypt": "^5.1.0",

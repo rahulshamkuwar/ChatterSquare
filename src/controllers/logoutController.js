@@ -5,9 +5,7 @@ exports.logout_get = (req, res) => {
   res.redirect(url.format({
     pathname:"/login",
     query: {
-      message: "Logged out successfully.",
-      error: false,
-      errorMessage: ""
+      message: "Logged out successfully."
     }
   }));
 };

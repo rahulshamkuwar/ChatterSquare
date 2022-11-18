@@ -3,18 +3,55 @@
 
 <main>
   <div class="container-fluid">
-    <div class="col m-2"><%- include ('../partials/alert') %></div>
-    <form action ="/login" method = "POST">
-      <div class="mb-3"> 
-          <label for="username" class="form-label">Username</label>
-          <input type="text" class="form-control" id="username" name="username">
+    <div class="mx-auto" style="width: 400px;">
+      <div class="col m-2"><%- include ('../partials/alert') %>
+
+        <div class="mb-3 text-center">
+          <img src="../../resources/img/ChSq-Logo.png" alt="logo" width="120" height="120">
+          <h3> Log into your account</h3>
+          <p class="disabled">Start chatting in The Square!</p>
+        </div>
+        <!-- login form -->
+        <form action ="/login" method = "POST" class="needs-validation" novalidate>
+          <div class="mb-3"> 
+              <!-- username -->
+              <label for = "username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" name="username" required>
+              <div class="invalid-feedback">
+                Please enter username.
+              </div>
+          </div>
+          <div class="mb-3">
+            <!-- password -->
+            <label for ="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+            <div class="invalid-feedback">
+              Please enter password.
+            </div>
+          </div>
+
+          <!-- submit button with login displayed-->
+          <div class="d-grid gap-2 mb-3">
+            <button type ="submit button" class="btn btn-primary">Login</button>
+          </div>
+
+          <!-- redirect to login page-->
+          <div class="float-start">
+            Don't have an account yet? <a href="/register">Create an account</a>
+          </div>
+        </form>
+        <script type="text/javascript">
+          var form = document.querySelector('.needs-validation');
+          form.addEventListener('submit', (event) => {
+            if (!form.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+          }, false)
+        </script>
       </div>
-      <div class="mb-3">
-        <label for ="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" name="password">
-      </div>
-      <button type ="submit" class="btn btn-primary">Submit</submit>
-    </form>
+    </div>
   </div>
 </main>
 

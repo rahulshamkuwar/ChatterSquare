@@ -84,6 +84,10 @@
       channel = square;
       chatHeader.innerHTML = `Welcome to ${channel[0].toUpperCase() + channel.slice(1)}!`;
       socket.emit('changeSquare', {"square": square});
+      var alertBox = document.getElementById("alertbox");
+      if (alertBox) {
+        alertBox.remove();
+      }
       while (messages.firstChild)
         messages.removeChild(messages.firstChild);
     }
