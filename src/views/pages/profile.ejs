@@ -78,11 +78,11 @@
                   Your name will appear in a selected color of your choice
                   <h4>100 Points</h4>
                 </p>
-                <% if (user.points >= 100) { %>
-                  <a href="#" class="btn btn-primary float-bottom">Purchase Perk</a>
-                <% } else { %>
-                  <a href="#" class="btn btn-primary float-bottom disabled">Purchase Perk</a>
-                <% } %>
+                  <% if (user.points >= 100) { %>
+                    <button type="button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_name_color">Purchase Perk</button>
+                  <% } else { %>
+                    <button type="button" class="btn btn-primary float-bottom disabled" data-bs-toggle="modal" data-bs-target="#buy_name_color">Purchase Perk</button>
+                  <% } %>
               </div>
             </div>
           </div>
@@ -275,15 +275,39 @@
                 </div>
                 <div class="col-7">
                   <input type="text" id="profile_picture" class="form-control" name="profilePicture" hidden>
-                  <div class="invalid-feedback">
-                    Please enter old password.
-                  </div>
+                  <div class="invalid-feedback"></div>
                 </div>
               </div>
             </form>
           </div>
           <div class="modal-footer">
             <button type="submit button" form="picture_form" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pick Name Color -->
+    <div class="modal fade" id="buy_name_color" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Pick A Color</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="name_color_form" action="/profile/update_perks" method="post" class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="colorPicker" class="form-label">New Profile Picture</label>
+                <input class="form-control form-control-color" type="color" id="colorPicker" name="nameColor" required>
+                <div class="invalid-feedback">
+                  Please pick a color.
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit button" form="name_color_form" class="btn btn-primary">Save changes</button>
           </div>
         </div>
       </div>
