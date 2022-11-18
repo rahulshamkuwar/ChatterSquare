@@ -78,9 +78,9 @@
                   Your name will appear in a selected color of your choice
                   <h4>100 Points</h4>
                 </p>
-                  <% if (user.points >= 100 && user.perks.namecolor === "") { %>
+                  <% if (user.points >= 100 && user.perks.nameColor === "") { %>
                     <button type="button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_name_color">Purchase Perk</button>
-                  <% } else if (user.perks.namecolor !== "") { %>
+                  <% } else if (user.perks.nameColor !== "") { %>
                     <button type="button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_name_color">Change Color</button>
                   <% } else { %>
                     <button type="button" class="btn btn-primary float-bottom disabled" data-bs-toggle="modal" data-bs-target="#buy_name_color">Purchase Perk</button>
@@ -114,11 +114,17 @@
                   You can change your profile picture to an GIF to add soome fun
                   <h4>100 Points</h4>
                 </p>
-                <% if (user.points >= 100) { %>
-                  <a href="#" class="btn btn-primary float-bottom">Purchase Perk</a>
-                <% } else { %>
-                  <a href="#" class="btn btn-primary float-bottom disabled">Purchase Perk</a>
-                <% } %>
+                <form action="/profile/update_perks" method="post">
+                  <label for="gif_profile_pic" class="col-form-label" hidden>ProfilePic</label>
+                  <input type="text" id="gif_profile_pic" class="form-control" name="subtractPoints" value="true" hidden>
+                  <% if (user.points >= 100 && !user.perks.profilePicture) { %>
+                    <button type="submit button" value="true" name="profilePicture" class="btn btn-primary float-bottom">Purchase Perk</button>
+                  <% } else if (user.perks.profilePicture) { %>
+                    <button type="submit button" class="btn btn-primary float-bottom disabled">Purchased</button>
+                  <% } else { %>
+                    <button type="submit button" class="btn btn-primary float-bottom disabled">Purchase Perk</button>
+                  <% } %>
+                </form>
               </div>
             </div>
           </div>
@@ -256,7 +262,7 @@
             <form id="picture_form" action="/profile/change_profile_picture" method="post" class="needs-validation" novalidate>
               <div class="mb-3">
                 <label for="formFile" class="form-label">New Profile Picture</label>
-                <input class="form-control" type="file" id="formFile" name="imageFile" accept="image/png, image/jpeg" required>
+                <input class="form-control" type="file" id="formFile" name="imageFile" accept="image/png, image/jpeg, image/jpg<%- user.perks.profilePicture ? ', image/gif' : ''%>" required>
                 <div class="invalid-feedback">
                   Please upload an image.
                 </div>
@@ -301,7 +307,7 @@
                   <label for="new_name_color" class="col-form-label" hidden>ProfilePic</label>
                 </div>
                 <div class="col-7">
-                  <input type="text" id="new_name_color" class="form-control" name="subtractPoints" value="<%-user.perks.namecolor === ''%>" hidden>
+                  <input type="text" id="new_name_color" class="form-control" name="subtractPoints" value="<%-user.perks.nameColor === ''%>" hidden>
                   <div class="invalid-feedback"></div>
                 </div>
               </div>
@@ -394,13 +400,20 @@
           if (form.id === "picture_form") {
             event.preventDefault();
             const file = document.querySelector('input[type=file]').files[0];
-            const reader = new FileReader();
-            reader.addEventListener("load", () => {
-              console.log(reader.result);
-              profile_picture.value = reader.result;
+            const check = file.name.split(".");
+            const extension = check[check.length - 1];
+            if (extension !== "jpeg" && extension !== "jpg" && extension !== "png" && extension !== "gif") {
+              profile_picture.value = "";
               form.submit();
-            },false);
-            reader.readAsDataURL(file);
+            } else {
+              const reader = new FileReader();
+              reader.addEventListener("load", () => {
+                console.log(reader.result);
+                profile_picture.value = reader.result;
+                form.submit();
+              },false);
+              reader.readAsDataURL(file);
+            }
           }
         }, false);
       });

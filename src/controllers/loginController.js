@@ -22,7 +22,12 @@ exports.login_post = async (req, res) => {
           isAdmin: user.isadmin,
           points: user.points,
           profilePicture: user.profilepicture,
-          perks: perks
+          perks: {
+            font: perks.font,
+            border: perks.border,
+            profilePicture: perks.profilepicture,
+            nameColor: perks.namecolor
+          }
         };
         req.session.user.password = "";
         req.session.save();
