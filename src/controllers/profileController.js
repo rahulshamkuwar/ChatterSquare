@@ -11,7 +11,12 @@ exports.profile_get = async (req, res) => {
       isAdmin: user.isadmin,
       points: user.points,
       profilePicture: user.profilepicture,
-      perks: perks
+      perks: {
+        font: perks.font,
+        border: perks.border,
+        profilePicture: perks.profilepicture,
+        nameColor: perks.namecolor
+      }
     };
     req.query.session = req.session;
     req.query.pathname = "/profile";
@@ -156,7 +161,30 @@ exports.profile_post_change_username = async (req, res) => {
 
 exports.profile_post_change_profile_picture = async (req, res) => {
   const { profilePicture }  = req.body;
-
+  const check = profilePicture.split(";")[0].split("/");
+  const ext = check[check.length - 1];
+  if (profilePicture === "") {
+    res.redirect(url.format({
+      pathname:"/profile",
+      query: {
+        message: "The input file is not valid.",
+        error: true,
+        pathname: "/profile"
+      }
+    }));
+    return;
+  }
+  if (ext.toLowerCase() === "gif" && !req.session.user.perks.profilePicture) {
+    res.redirect(url.format({
+      pathname:"/profile",
+      query: {
+        message: "You have not purchased the Animated Profile Picture perk.",
+        error: true,
+        pathname: "/profile"
+      }
+    }));
+    return;
+  }
   const user = await db.updateUser({userId: req.session.user.userId, profilePicture: profilePicture}).catch((err) => {
     console.log(err);
     res.redirect(url.format({
@@ -193,10 +221,10 @@ exports.profile_post_update_perks = async (req, res) => {
       query: {
         message: "You do not have enough points.",
         error: true,
-        errorMessage: err,
         pathname: "/profile"
       }
     }));
+    return;
   }
   const { font, border, profilePicture, nameColor, subtractPoints }  = req.body;
 
@@ -222,7 +250,12 @@ exports.profile_post_update_perks = async (req, res) => {
       profilePicture: user.profilepicture,
     };
   }
-  req.session.user.perks = perks;
+  req.session.user.perks = {
+    font: perks.font,
+    border: perks.border,
+    profilePicture: perks.profilepicture,
+    nameColor: perks.namecolor
+  };
   res.redirect(url.format({
     pathname:"/profile",
     query: {
