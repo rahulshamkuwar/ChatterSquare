@@ -78,8 +78,10 @@
                   Your name will appear in a selected color of your choice
                   <h4>100 Points</h4>
                 </p>
-                  <% if (user.points >= 100) { %>
+                  <% if (user.points >= 100 && user.perks.namecolor === "") { %>
                     <button type="button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_name_color">Purchase Perk</button>
+                  <% } else if (user.perks.namecolor !== "") { %>
+                    <button type="button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_name_color">Change Color</button>
                   <% } else { %>
                     <button type="button" class="btn btn-primary float-bottom disabled" data-bs-toggle="modal" data-bs-target="#buy_name_color">Purchase Perk</button>
                   <% } %>
@@ -288,10 +290,19 @@
           <div class="modal-body">
             <form id="name_color_form" action="/profile/update_perks" method="post" class="needs-validation" novalidate>
               <div class="mb-3">
-                <label for="colorPicker" class="form-label">New Profile Picture</label>
+                <label for="colorPicker" class="form-label">Profile Name Color</label>
                 <input class="form-control form-control-color" type="color" id="colorPicker" name="nameColor" required>
                 <div class="invalid-feedback">
                   Please pick a color.
+                </div>
+              </div>
+              <div class="row g-3 mb-2">
+                <div class="col-5">
+                  <label for="new_name_color" class="col-form-label" hidden>ProfilePic</label>
+                </div>
+                <div class="col-7">
+                  <input type="text" id="new_name_color" class="form-control" name="subtractPoints" value="<%-user.perks.namecolor === ''%>" hidden>
+                  <div class="invalid-feedback"></div>
                 </div>
               </div>
             </form>

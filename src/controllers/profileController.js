@@ -5,7 +5,16 @@ const QueryResultError = require("pg-promise").errors.QueryResultError;
 const qrec = require("pg-promise").errors.queryResultErrorCode;
 
 exports.profile_get = async (req, res) => {
-  await db.getUser({userId:req.session.user.userId}).then(() => {
+  await db.getUser({userId:req.session.user.userId}).then(async (user) => {
+    const perks = await db.getPerks({userId: user.userid});
+    req.session.user = {
+      userId: user.userid,
+      username: user.username,
+      isAdmin: user.isadmin,
+      points: user.points,
+      profilePicture: user.profilepicture,
+      perks: perks
+    };
     req.query.session = req.session;
     req.query.pathname = "/profile";
     res.status(200).render("pages/profile", req.query);
@@ -180,7 +189,18 @@ exports.profile_post_change_profile_picture = async (req, res) => {
 };
 
 exports.profile_post_update_perks = async (req, res) => {
-  const { font, border, profilePicture, nameColor }  = req.body;
+  if (req.session.user.points < 100) {
+    res.redirect(url.format({
+      pathname:"/profile",
+      query: {
+        message: "You do not have enough points.",
+        error: true,
+        errorMessage: err,
+        pathname: "/profile"
+      }
+    }));
+  }
+  const { font, border, profilePicture, nameColor, subtractPoints }  = req.body;
 
   const perks = await db.updatePerks({userId: req.session.user.userId, font: font, border: border, profilePicture: profilePicture, nameColor: nameColor }).catch((err) => {
     console.log(err);
@@ -194,7 +214,16 @@ exports.profile_post_update_perks = async (req, res) => {
       }
     }));
   });
-  const user = await db.updateUser({userId: req.session.user.userId, points: -100});
+  if (subtractPoints) {
+    const user = await db.updateUser({userId: req.session.user.userId, points: -100});
+    req.session.user = {
+      userId: user.userid,
+      username: user.username,
+      isAdmin: user.isadmin,
+      points: user.points,
+      profilePicture: user.profilepicture,
+    };
+  }
   req.session.user.perks = perks;
   res.redirect(url.format({
     pathname:"/profile",
