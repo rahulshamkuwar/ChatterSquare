@@ -178,3 +178,30 @@ exports.profile_post_change_profile_picture = async (req, res) => {
     }
   }));
 };
+
+exports.profile_post_update_perks = async (req, res) => {
+  const { font, border, profilePicture, nameColor }  = req.body;
+
+  const perks = await db.updatePerks({userId: req.session.user.userId, font: font, border: border, profilePicture: profilePicture, nameColor: nameColor }).catch((err) => {
+    console.log(err);
+    res.redirect(url.format({
+      pathname:"/profile",
+      query: {
+        message: "There was an error buying perk.",
+        error: true,
+        errorMessage: err,
+        pathname: "/profile"
+      }
+    }));
+  });
+  const user = await db.updateUser({userId: req.session.user.userId, points: -100});
+  req.session.user.perks = perks;
+  res.redirect(url.format({
+    pathname:"/profile",
+    query: {
+      message: "Successfully purchased perk.",
+      pathname: "/profile",
+      session: req.session
+    }
+  }));
+};
