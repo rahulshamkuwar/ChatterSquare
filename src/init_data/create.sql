@@ -49,7 +49,8 @@ DROP TABLE IF EXISTS userPerks CASCADE;
 CREATE TABLE userPerks (
   userId INT NOT NULL,
   font TEXT NOT NULL,
-  border TEXT NOT NULL,
+  borderType TEXT NOT NULL,
+  borderColor TEXT NOT NULL,
   profilePicture BOOLEAN NOT NULL,
   nameColor TEXT NOT NULL,
   CONSTRAINT fk_user FOREIGN KEY (userId) REFERENCES users(userId)

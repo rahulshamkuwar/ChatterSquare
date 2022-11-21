@@ -217,7 +217,8 @@ exports.profile_post_change_profile_picture = async (req, res) => {
 };
 
 exports.profile_post_update_perks = async (req, res) => {
-  if (req.session.user.points < 100) {
+  const { font, borderType, borderColor, profilePicture, nameColor, subtractPoints }  = req.body;
+  if (subtractPoints == false && req.session.user.points < 100) {
     res.redirect(url.format({
       pathname:"/profile",
       query: {
@@ -228,9 +229,8 @@ exports.profile_post_update_perks = async (req, res) => {
     }));
     return;
   }
-  const { font, border, profilePicture, nameColor, subtractPoints }  = req.body;
 
-  const perks = await db.updatePerks({userId: req.session.user.userId, font: font, border: border, profilePicture: profilePicture, nameColor: nameColor }).catch((err) => {
+  const perks = await db.updatePerks({userId: req.session.user.userId, font: font, borderType: borderType, borderColor: borderColor, profilePicture: profilePicture, nameColor: nameColor }).catch((err) => {
     console.log(err);
     res.redirect(url.format({
       pathname:"/profile",
@@ -242,8 +242,20 @@ exports.profile_post_update_perks = async (req, res) => {
       }
     }));
   });
-  if (subtractPoints) {
-    const user = await db.updateUser({userId: req.session.user.userId, points: -100});
+  if (subtractPoints == true) {
+    const user = await db.updateUser({userId: req.session.user.userId, points: -100}).catch((err) => {
+      console.log(err);
+      res.redirect(url.format({
+        pathname:"/profile",
+        query: {
+          message: "There was an error buying perk.",
+          error: true,
+          errorMessage: err,
+          pathname: "/profile"
+        }
+      }));
+      return;
+    });
     req.session.user = {
       userId: user.userid,
       username: user.username,
