@@ -45,7 +45,7 @@ exports.getPerks = async ({userId}) => {
 exports.newUser = async ({username, password, isAdmin = false, points = 0, profilePicture = "/resources/img/Generic-Profile-1600x1600.png"}) => {
   await db.task(`newUser-${username}`, async task => {
     const {userid} = await task.one("INSERT INTO users(username, password, isAdmin, points, profilePicture) VALUES ($1, $2, $3, $4, $5) RETURNING userId;", [username, password, isAdmin, points, profilePicture]);
-    await task.none("INSERT INTO userPerks(userId, font, border, profilePicture, nameColor) VALUES ($1, $2, $3, $4, $5);", [userid, "", "", false, ""]);
+    await task.none("INSERT INTO userPerks(userId, font, borderType, borderColor, profilePicture, nameColor) VALUES ($1, $2, $3, $4, $5, $6);", [userid, "", "", "", false, ""]);
   });
 };
 
@@ -170,7 +170,7 @@ exports.updateUser = async ({userId, username, password, isAdmin, points, profil
 // Expects `userId` as Number, `font` as String, `border` as String, `profilePicture` as String, and `nameColor` as String.
 // Returns an object with all perks.
 // Does not handle errors.
-exports.updatePerks = async ({userId, font, border, profilePicture, nameColor}) => {
+exports.updatePerks = async ({userId, font, borderType, borderColor, profilePicture, nameColor}) => {
   let query = "UPDATE userPerks SET ";
   let comma = "";
   let updated = false;
@@ -183,12 +183,19 @@ exports.updatePerks = async ({userId, font, border, profilePicture, nameColor}) 
     count++;
     values.push(font);
   }
-  if (border) {
-    query += comma + `border = $${count}`;
+  if (borderType) {
+    query += comma + `borderType = $${count}`;
     comma = ", ";
     updated = true;
     count++;
-    values.push(border);
+    values.push(borderType);
+  }
+  if (borderColor) {
+    query += comma + `borderColor = $${count}`;
+    comma = ", ";
+    updated = true;
+    count++;
+    values.push(borderColor);
   }
   if (profilePicture) {
     query += comma + `profilePicture = $${count}`;

@@ -97,7 +97,7 @@
                   Borders around your message will appear in a special border
                   <h4>100 Points</h4>
                 </p>
-                <% if (user.perks.border !== "") { %>
+                <% if (user.perks.borderType !== "" && user.perks.borderColor !== "") { %>
                   <button type="submit button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_border">Change Font</button>
                 <%} else if (user.points >= 100) { %>
                   <button type="submit button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_border">Purchase Perk</button>
@@ -363,7 +363,7 @@
           <div class="modal-body">
             <form id="border_form" action="/profile/update_perks" method="post" class="needs-validation" novalidate>
               <div class="mb-3">
-                <label for="pick_border_type" class="form-label">Chat Message Border</label>
+                <label for="pick_border_type" class="form-label">Chat Message Border Type</label>
                 <select id="pick_border_type" name="borderType" required class="form-select" aria-label="Select Border Type">
                   <option selected disabled value="">Choose one of the following</option>
                   <option value="Noto Serif Oriya">Solid</option>
@@ -376,20 +376,14 @@
                 </div>
               </div>
               <div class="mb-3">
-                <label for="pick_border_color" class="form-label">Chat Message Border</label>
-                <select id="pick_border_color" name="borderColor" required class="form-select" aria-label="Select Border Color">
-                  <option selected disabled value="">Choose one of the following</option>
-                  <option value="Noto Serif Oriya">Solid</option>
-                  <option value="Montserrat">Dashed</option>
-                  <option value="Source Code Pro">Dotted</option>
-                  <option value="Dancing Script">Inset</option>
-                </select>
+                <label for="pick_border_color" class="form-label">Chat Message Border Color</label>
+                <input class="form-control form-control-color" value="<%- user.perks.borderColor %>" type="color" id="borderColorPicker" name="borderColor" required>
                 <div class="invalid-feedback">
                   Please pick a border.
                 </div>
               </div>
               <label for="new_font" class="col-form-label" hidden></label>
-              <input type="text" id="new_font" class="form-control" name="subtractPoints" value="<%-user.perks.font === ''%>" hidden>
+              <input type="text" id="new_font" class="form-control" name="subtractPoints" value="<%-user.perks.borderType === '' && user.perks.borderColor === ''%>" hidden>
             </form>
           </div>
           <div class="modal-footer">

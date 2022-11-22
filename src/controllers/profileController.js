@@ -15,7 +15,8 @@ exports.profile_get = async (req, res) => {
       profilePicture: user.profilepicture,
       perks: {
         font: perks.font,
-        border: perks.border,
+        borderType: perks.bordertype,
+        borderColor: perks.bordercolor,
         profilePicture: perks.profilepicture,
         nameColor: perks.namecolor
       }
@@ -266,7 +267,8 @@ exports.profile_post_update_perks = async (req, res) => {
   }
   req.session.user.perks = {
     font: perks.font,
-    border: perks.border,
+    borderType: perks.bordertype,
+    borderColor: perks.bordercolor,
     profilePicture: perks.profilepicture,
     nameColor: perks.namecolor
   };
