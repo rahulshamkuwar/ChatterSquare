@@ -219,7 +219,7 @@ exports.profile_post_change_profile_picture = async (req, res) => {
 
 exports.profile_post_update_perks = async (req, res) => {
   const { font, borderType, borderColor, profilePicture, nameColor, subtractPoints }  = req.body;
-  if (subtractPoints == false && req.session.user.points < 100) {
+  if (subtractPoints === "true" && req.session.user.points < 100) {
     res.redirect(url.format({
       pathname:"/profile",
       query: {
@@ -243,7 +243,7 @@ exports.profile_post_update_perks = async (req, res) => {
       }
     }));
   });
-  if (subtractPoints == true) {
+  if (subtractPoints === "true") {
     const user = await db.updateUser({userId: req.session.user.userId, points: -100}).catch((err) => {
       console.log(err);
       res.redirect(url.format({
