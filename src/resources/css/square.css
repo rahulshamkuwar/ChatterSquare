@@ -156,6 +156,21 @@ button {
   background-image: url(../img/ChSq-Logo.png);
 }
 
+.alertPopup {
+  position: fixed;
+  top: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  background-color: hsl(350, 73%, 66%);
+  color: black;
+  border: 2px solid red;
+  border-radius: 8px;
+  z-index: 1000;
+  font-size: 1.3rem;
+  padding: 6px 12px 6px 12px;
+}
+
 button:hover {
   background-color: #455A64;
   color: #B0BEC5;
