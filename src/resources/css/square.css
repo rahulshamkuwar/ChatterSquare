@@ -6,6 +6,12 @@ html, body {
   font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
+.dropdown-item:active,
+.dropdown-item:hover {
+  filter: hue-rotate(30deg);
+  filter: grayscale(70%);
+}
+
 h1, h2, p {
   margin: 0px;
   padding: 0px;
@@ -126,7 +132,7 @@ button {
 
 .messages {
   overflow-y: scroll;
-  height: calc(100vh - 170px);
+  height: calc(100vh - 183px);
 }
 
 .channels div:hover {

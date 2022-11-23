@@ -1,0 +1,10 @@
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited,
+.dropdown-item:active,
+.dropdown-item:hover,
+.btn-primary:focus {
+  filter: hue-rotate(30deg);
+  filter: grayscale(70%);
+}

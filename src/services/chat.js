@@ -32,13 +32,12 @@ const connection = (socket) => {
 
   socket.on("disconnect", () => {
     //console.log(`[SOCKET ${socket.id[0]}] Closed.`);
-    /*
-    ==ALERT TESTING==
+    /* ==ALERT TESTING==
+     io.emit('alert', {
+       message: "Example alert text.",
+       errorMessage: "A user disconnected."
+     });
     */
-    io.emit('alert', {
-      message: "Example alert text.",
-      errorMessage: "A user disconnected."
-    });
   });
 };
 
