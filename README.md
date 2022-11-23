@@ -24,7 +24,7 @@ ChatterSquare is a messaging application. Each message sent is 10 points. The mo
 - HTML
 
 ## Prerequisites
-deployed - must be one 'CU Wireless' or CU's VPN
+deployed - must be on 'CU Wireless' or CU's VPN
 
 locally - docker
 
