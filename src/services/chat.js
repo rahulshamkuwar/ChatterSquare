@@ -58,18 +58,22 @@ function sendMessageHistory(socket) {
         socket.emit('message', message);
       }).catch((err) => {
         console.log(err);
-        socket.emit("alert", {
-          message: "There was an error retrieving some messages. Please try reloading the page.",
-          errorMessage: err
-        });
+        if (err.received > 0) { //dont send an error saying we can't load messages if there was no messages to load
+          socket.emit("alert", {
+            message: "There was an error retrieving some messages. Please try reloading the page.",
+            errorMessage: err
+          });
+        }
       });
     });
   }).catch((err) => {
     console.log(err);
-    socket.emit("alert", {
-      message: "There was an error retrieving some messages. Please try reloading the page.",
-      errorMessage: err
-    });
+    if (err.received > 0) { //dont send an error saying we can't load messages if there was no messages to load
+      socket.emit("alert", {
+        message: "There was an error retrieving some messages. Please try reloading the page.",
+        errorMessage: err
+      });
+    }
   });
 }
 
