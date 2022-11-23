@@ -34,13 +34,13 @@
                         </button>
                       </div>
                       <div class="col col-3">
-                        <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal"
+                        <button type="submit button" class="btn btn-light btn-sm" data-bs-toggle="modal"
                           data-bs-target="#edit_username">
                           Change Username
                         </button>
                       </div>
                       <div class="col col-3">
-                        <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal"
+                        <button type="submit button" class="btn btn-light btn-sm" data-bs-toggle="modal"
                           data-bs-target="#change_password">
                           Change Password
                         </button>
@@ -78,11 +78,13 @@
                   Your name will appear in a selected color of your choice
                   <h4>100 Points</h4>
                 </p>
-                <% if (user.points >= 100) { %>
-                  <a href="#" class="btn btn-primary float-bottom">Purchase Perk</a>
-                <% } else { %>
-                  <a href="#" class="btn btn-primary float-bottom disabled">Purchase Perk</a>
-                <% } %>
+                  <% if (user.points >= 100 && user.perks.nameColor === "") { %>
+                    <button type="submit button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_name_color">Purchase Perk</button>
+                  <% } else if (user.perks.nameColor !== "") { %>
+                    <button type="submit button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_name_color">Change Color</button>
+                  <% } else { %>
+                    <button type="submit button" class="btn btn-primary float-bottom disabled" data-bs-toggle="modal" data-bs-target="#buy_name_color">Purchase Perk</button>
+                  <% } %>
               </div>
             </div>
           </div>
@@ -95,10 +97,12 @@
                   Borders around your message will appear in a special border
                   <h4>100 Points</h4>
                 </p>
-                <% if (user.points >= 100) { %>
-                  <a href="#" class="btn btn-primary float-bottom">Purchase Perk</a>
+                <% if (user.perks.borderType !== "" && user.perks.borderColor !== "") { %>
+                  <button type="submit button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_border">Change Border</button>
+                <%} else if (user.points >= 100) { %>
+                  <button type="submit button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_border">Purchase Perk</button>
                 <% } else { %>
-                  <a href="#" class="btn btn-primary float-bottom disabled">Purchase Perk</a>
+                  <button type="submit button" class="btn btn-primary float-bottom disabled">Purchase Perk</button>
                 <% } %>
               </div>
             </div>
@@ -112,11 +116,17 @@
                   You can change your profile picture to an GIF to add soome fun
                   <h4>100 Points</h4>
                 </p>
-                <% if (user.points >= 100) { %>
-                  <a href="#" class="btn btn-primary float-bottom">Purchase Perk</a>
-                <% } else { %>
-                  <a href="#" class="btn btn-primary float-bottom disabled">Purchase Perk</a>
-                <% } %>
+                <form action="/profile/update_perks" method="post">
+                  <label for="new_font" class="col-form-label" hidden></label>
+                  <input type="text" id="new_font" class="form-control" name="subtractPoints" value="true" hidden>
+                  <% if (user.points >= 100 && !user.perks.profilePicture) { %>
+                    <button type="submit button" value="true" name="profilePicture" class="btn btn-primary float-bottom">Purchase Perk</button>
+                  <% } else if (user.perks.profilePicture) { %>
+                    <button type="submit button" class="btn btn-primary float-bottom disabled">Purchased</button>
+                  <% } else { %>
+                    <button type="submit button" class="btn btn-primary float-bottom disabled">Purchase Perk</button>
+                  <% } %>
+                </form>
               </div>
             </div>
           </div>
@@ -129,10 +139,12 @@
                   Messages sent by you will appear in a special font
                   <h4>100 Points</h4>
                 </p>
-                <% if (user.points >= 100) { %>
-                  <a href="#" class="btn btn-primary float-bottom">Purchase Perk</a>
+                <% if (user.perks.font !== "") { %>
+                  <button type="submit button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_font">Change Font</button>
+                <%} else if (user.points >= 100) { %>
+                  <button type="submit button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_font">Purchase Perk</button>
                 <% } else { %>
-                  <a href="#" class="btn btn-primary float-bottom disabled">Purchase Perk</a>
+                  <button type="submit button" class="btn btn-primary float-bottom disabled">Purchase Perk</button>
                 <% } %>
               </div>
             </div>
@@ -254,7 +266,7 @@
             <form id="picture_form" action="/profile/change_profile_picture" method="post" class="needs-validation" novalidate>
               <div class="mb-3">
                 <label for="formFile" class="form-label">New Profile Picture</label>
-                <input class="form-control" type="file" id="formFile" name="imageFile" accept="image/png, image/jpeg" required>
+                <input class="form-control" type="file" id="formFile" name="imageFile" accept="image/png, image/jpeg, image/jpg<%- user.perks.profilePicture ? ', image/gif' : ''%>" required>
                 <div class="invalid-feedback">
                   Please upload an image.
                 </div>
@@ -265,15 +277,117 @@
                 </div>
                 <div class="col-7">
                   <input type="text" id="profile_picture" class="form-control" name="profilePicture" hidden>
-                  <div class="invalid-feedback">
-                    Please enter old password.
-                  </div>
+                  <div class="invalid-feedback"></div>
                 </div>
               </div>
             </form>
           </div>
           <div class="modal-footer">
             <button type="submit button" form="picture_form" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pick Name Color -->
+    <div class="modal fade" id="buy_name_color" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Pick A Color</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="name_color_form" action="/profile/update_perks" method="post" class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="colorPicker" class="form-label">Profile Name Color</label>
+                <input class="form-control form-control-color" value="<%- user.perks.nameColor %>" type="color" id="colorPicker" name="nameColor" required>
+                <div class="invalid-feedback">
+                  Please pick a color.
+                </div>
+              </div>
+              <label for="new_name_color" class="col-form-label" hidden>ProfilePic</label>
+              <input type="text" id="new_name_color" class="form-control" name="subtractPoints" value="<%-user.perks.nameColor === ''%>" hidden>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit button" form="name_color_form" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pick Font -->
+    <div class="modal fade" id="buy_font" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Pick A Font</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="font_form" action="/profile/update_perks" method="post" class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="pick_font" class="form-label">Chat Message Font</label>
+                <select id="pick_font" name="font" required class="form-select" aria-label="Select Font">
+                  <option selected disabled value="">Choose one of the following</option>
+                  <option value="Noto Serif Oriya">Noto Serif Oriya</option>
+                  <option value="Montserrat">Montserrat</option>
+                  <option value="Source Code Pro">Source Code Pro</option>
+                  <option value="Dancing Script">Dancing Script</option>
+                  <option value="Chakra Petch">Chakra Petch</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please pick a font.
+                </div>
+              </div>
+              <label for="new_font" class="col-form-label" hidden></label>
+              <input type="text" id="new_font" class="form-control" name="subtractPoints" value="<%-user.perks.font === ''%>" hidden>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit button" form="font_form" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Pick Border -->
+    <div class="modal fade" id="buy_border" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Pick A Border</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="border_form" action="/profile/update_perks" method="post" class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="pick_border_type" class="form-label">Chat Message Border Type</label>
+                <select id="pick_border_type" name="borderType" required class="form-select" aria-label="Select Border Type">
+                  <option selected disabled value="">Choose one of the following</option>
+                  <option value="Noto Serif Oriya">Solid</option>
+                  <option value="Montserrat">Dashed</option>
+                  <option value="Source Code Pro">Dotted</option>
+                  <option value="Dancing Script">Inset</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please pick a border.
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="pick_border_color" class="form-label">Chat Message Border Color</label>
+                <input class="form-control form-control-color" value="<%- user.perks.borderColor %>" type="color" id="borderColorPicker" name="borderColor" required>
+                <div class="invalid-feedback">
+                  Please pick a border.
+                </div>
+              </div>
+              <label for="new_font" class="col-form-label" hidden></label>
+              <input type="text" id="new_font" class="form-control" name="subtractPoints" value="<%-user.perks.borderType === '' && user.perks.borderColor === ''%>" hidden>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit button" form="border_form" class="btn btn-primary">Save changes</button>
           </div>
         </div>
       </div>
@@ -359,13 +473,19 @@
           if (form.id === "picture_form") {
             event.preventDefault();
             const file = document.querySelector('input[type=file]').files[0];
-            const reader = new FileReader();
-            reader.addEventListener("load", () => {
-              console.log(reader.result);
-              profile_picture.value = reader.result;
+            const check = file.name.split(".");
+            const extension = check[check.length - 1];
+            if (extension !== "jpeg" && extension !== "jpg" && extension !== "png" && extension !== "gif") {
+              profile_picture.value = "";
               form.submit();
-            },false);
-            reader.readAsDataURL(file);
+            } else {
+              const reader = new FileReader();
+              reader.addEventListener("load", () => {
+                profile_picture.value = reader.result;
+                form.submit();
+              },false);
+              reader.readAsDataURL(file);
+            }
           }
         }, false);
       });

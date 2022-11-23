@@ -34,7 +34,7 @@ exports.getChat = async ({chatName, limit}) => {
 // Does not handle errors.
 exports.getPerks = async ({userId}) => {
   return await db.task(`getUserPerks-${userId}`, async task => {
-    return await task.many("SELECT * FROM userPerks WHERE userId = $1;", [userId]);
+    return await task.one("SELECT * FROM userPerks WHERE userId = $1;", [userId]);
   });
 };
 
@@ -45,7 +45,7 @@ exports.getPerks = async ({userId}) => {
 exports.newUser = async ({username, password, isAdmin = false, points = 0, profilePicture = "/resources/img/Generic-Profile-1600x1600.png"}) => {
   await db.task(`newUser-${username}`, async task => {
     const {userid} = await task.one("INSERT INTO users(username, password, isAdmin, points, profilePicture) VALUES ($1, $2, $3, $4, $5) RETURNING userId;", [username, password, isAdmin, points, profilePicture]);
-    await task.none("INSERT INTO userPerks(userId, font, border, profilePicture, nameColor) VALUES ($1, $2, $3, $4, $5);", [userid, "", "", "", ""]);
+    await task.none("INSERT INTO userPerks(userId, font, borderType, borderColor, profilePicture, nameColor) VALUES ($1, $2, $3, $4, $5, $6);", [userid, "", "", "", false, ""]);
   });
 };
 
@@ -55,6 +55,9 @@ exports.newUser = async ({username, password, isAdmin = false, points = 0, profi
 exports.newChat = async ({chatName, userId, message}) => {
   await db.task(`new${chatName}Chat-${userId}`, async task => {
     await task.none(`INSERT INTO ${chatName}chat(message, time, userId) VALUES ($1, NOW(), $2);`, [message, userId]);
+    if (message.trim().length >= 5) {
+      await task.none("UPDATE users SET points = points + 10 WHERE userId = $1;", [userId]);
+    }
   });
 };
 
@@ -110,7 +113,7 @@ exports.deleteChat = async ({chatName, messageId}) => {
   });
 };
 
-// Expects `userId` as Number, `username` as String, `password` as String, `isAdmin` as bool, `points` as Number, `profilePicture` as String.
+// Expects `userId` as Number, `username` as String, `password` as String, `isAdmin` as bool, `points` as bool, `profilePicture` as String.
 // Returns user object.
 // Does not handle errors.
 exports.updateUser = async ({userId, username, password, isAdmin, points, profilePicture}) => {
@@ -141,7 +144,7 @@ exports.updateUser = async ({userId, username, password, isAdmin, points, profil
     values.push(isAdmin);
   }
   if (points) {
-    query += comma + `points = $${count}`;
+    query += comma + `points = points + $${count}`;
     comma = ", ";
     updated = true;
     count++;
@@ -167,7 +170,7 @@ exports.updateUser = async ({userId, username, password, isAdmin, points, profil
 // Expects `userId` as Number, `font` as String, `border` as String, `profilePicture` as String, and `nameColor` as String.
 // Returns an object with all perks.
 // Does not handle errors.
-exports.updatePerks = async ({userId, font, border, profilePicture, nameColor}) => {
+exports.updatePerks = async ({userId, font, borderType, borderColor, profilePicture, nameColor}) => {
   let query = "UPDATE userPerks SET ";
   let comma = "";
   let updated = false;
@@ -180,12 +183,19 @@ exports.updatePerks = async ({userId, font, border, profilePicture, nameColor}) 
     count++;
     values.push(font);
   }
-  if (border) {
-    query += comma + `border = $${count}`;
+  if (borderType) {
+    query += comma + `borderType = $${count}`;
     comma = ", ";
     updated = true;
     count++;
-    values.push(border);
+    values.push(borderType);
+  }
+  if (borderColor) {
+    query += comma + `borderColor = $${count}`;
+    comma = ", ";
+    updated = true;
+    count++;
+    values.push(borderColor);
   }
   if (profilePicture) {
     query += comma + `profilePicture = $${count}`;
@@ -204,6 +214,7 @@ exports.updatePerks = async ({userId, font, border, profilePicture, nameColor}) 
   if (!updated) {
     throw Error("Did not pass values to update perks!");
   }
+  values.push(userId)
   query += ` WHERE userId = $${count} RETURNING *;`;
   return await db.task(`updatePerks-${userId}`, async task => {
     return await task.one(query, values);

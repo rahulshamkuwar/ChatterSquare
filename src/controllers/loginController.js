@@ -13,14 +13,21 @@ exports.login_get = (req, res) => {
 exports.login_post = async (req, res) => {
   const { username, password } = req.body;
   await db.getUser({username: username}).then((user) => {
-    bcrypt.compare(password, user.password).then((result) => {
+    bcrypt.compare(password, user.password).then(async (result) => {
       if (result) {
+        const perks = await db.getPerks({userId: user.userid});
         req.session.user = {
           userId: user.userid,
           username: user.username,
           isAdmin: user.isadmin,
           points: user.points,
-          profilePicture: user.profilepicture
+          profilePicture: user.profilepicture,
+          perks: {
+            font: perks.font,
+            border: perks.border,
+            profilePicture: perks.profilepicture,
+            nameColor: perks.namecolor
+          }
         };
         req.session.user.password = "";
         req.session.save();
