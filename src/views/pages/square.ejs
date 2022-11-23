@@ -8,9 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch&family=Dancing+Script&family=Lora&family=Montserrat&family=Source+Code+Pro&display=swap" rel="stylesheet"> 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 </head>
 <body>
-  <div class="nav">
+  <div class="barnav">
     <div class="left">
       <div class="logo image"></div>
       <p><strong>The Square</strong></p>
@@ -20,7 +21,8 @@
       <div class="pfp image"></div>
     </div>
   </div>
-  <div id="alert"></div>
+  <div id="alert">
+  </div>
   <div class="content">
 
     <div class="channels">
@@ -63,12 +65,15 @@
     });
 
     socket.on("alert", (data) => {
-      var alert = document.getElementById("alert");
-      var alertBox = document.createElement("div");
-      alertBox.id = "alertbox";
-      alertBox.classList.add("alertPopup");
-      alertBox.innerHTML = "<strong>Alert: </strong>" + data.message;
-      alert.appendChild(alertBox);
+        var alert = document.getElementById("alert");
+        var alertBox = document.createElement("div");
+        alertBox.id = "alertbox";
+        alertBox.classList.add("alert");
+        alertBox.classList.add("alert-danger");
+        alertBox.setAttribute("role", "alert");
+        alertBox.setAttribute("style", "margin-bottom: 0px; border-radius: 0px;");
+        alertBox.innerHTML = data.message;
+        alert.appendChild(alertBox);
     });
 
     socket.on('message', function(msg) {
