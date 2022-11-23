@@ -170,3 +170,23 @@ button:hover {
 button, .name, .channels div {
   transition: 0.3s;
 }
+
+.font_C {
+  font-family: 'Chakra Petch', sans-serif;
+}
+
+.font_D {
+  font-family: 'Dancing Script', cursive;
+}
+
+.font_L {
+  font-family: 'Lora', serif;
+}
+
+.font_N {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.font_S {
+  font-family: 'Source Code Pro', monospace;
+}
