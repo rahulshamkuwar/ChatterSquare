@@ -1,4 +1,6 @@
 const db = require("../services/database");
+const QueryResultError = require("pg-promise").errors.QueryResultError;
+const qrec = require("pg-promise").errors.queryResultErrorCode;
 
 var io;
 const linkToSocketioInstance = (ref) => {
@@ -62,6 +64,7 @@ function sendMessageHistory(socket) {
   }).catch((err) => {
     console.log(err);
     if (err.received > 0) { //dont send an error saying we can't load messages if there was no messages to load
+    // if (err instanceof QueryResultError && err.code !== qrec.noData) {
       socket.emit("alert", {
         message: "There was an error retrieving some messages. Please try reloading the page.",
         errorMessage: err
