@@ -105,10 +105,10 @@
       if (msg.perks) {
         if (msg.perks.font) {
           var fontID = msg.perks.font[0];
-          elt.classList.add("")
+          elt.classList.add("font_" + fontID);
         }
         if (msg.perks.border) {
-          console.log(msg.perks.border);
+          elt.style.border = msg.perks.border;
         }
         if (msg.perks.nameColor) {
           console.log(msg.perks.nameColor);
