@@ -52,9 +52,9 @@ exports.newUser = async ({username, password, isAdmin = false, points = 0, profi
 // Expects `chatName` as String, `userId` as Number, `message` as String.
 // Returns void.
 // Does not handle errors.
-exports.newChat = async ({chatName, userId, message}) => {
+exports.newChat = async ({chatName, userId, message, perks}) => {
   await db.task(`new${chatName}Chat-${userId}`, async task => {
-    await task.none(`INSERT INTO ${chatName}chat(message, time, userId) VALUES ($1, NOW(), $2);`, [message, userId]);
+    await task.none(`INSERT INTO ${chatName}chat(message, time, userId, perks) VALUES ($1, NOW(), $2, $3);`, [message, userId, perks]);
     if (message.trim().length >= 5) {
       await task.none("UPDATE users SET points = points + 10 WHERE userId = $1;", [userId]);
     }
