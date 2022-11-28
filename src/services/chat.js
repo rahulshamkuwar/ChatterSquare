@@ -14,7 +14,7 @@ const connection = (socket) => {
 
   socket.on('message', (msg) => {
     db.newChat({chatName: socket.square, message: msg.message, userId: msg.userid, perks: msg.perks}).then(() => {
-      console.log(`[SOCKET ${socket.id[0]} - ${socket.square}] ${msg.message} (${msg.perks})`);
+      // console.log(`[SOCKET ${socket.id[0]} - ${socket.square}] ${msg.message} (${msg.perks})`);
       io.emit('message', msg);
     }).catch((err) => {
       console.log(err);
