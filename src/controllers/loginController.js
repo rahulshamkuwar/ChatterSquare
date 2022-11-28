@@ -24,8 +24,8 @@ exports.login_post = async (req, res) => {
           profilePicture: user.profilepicture,
           perks: {
             font: perks.font,
-            borderColor: perks.borderColor,
-            borderType: perks.borderType,
+            borderColor: perks.bordercolor,
+            borderType: perks.bordertype,
             profilePicture: perks.profilepicture,
             nameColor: perks.namecolor
           }
