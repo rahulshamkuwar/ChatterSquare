@@ -39,10 +39,7 @@ git clone git@github.com:rahulshamkuwar/ChatterSquare.git
 // for https
 git clone https://github.com/rahulshamkuwar/ChatterSquare.git
 ```
-- make the bash file executable so the postgres container is finished setting up before running the web container
-```
-chmod u+x ./src/wait-for-it.sh
-```
+- If on windows, make sure the `./src/wait-for-it.sh` file is using `LF` for the End of Line Sequence. On Linux use `CRLF`.
 - run the docker instance
 ```
 docker-compose up
