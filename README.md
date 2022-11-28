@@ -22,6 +22,7 @@ ChatterSquare is a messaging application. Each message sent is 10 points. The mo
 - Javascript
 - CSS
 - HTML
+- Bootstrap
 
 ## Prerequisites
 deployed - must be on 'CU Wireless' or CU's VPN
@@ -30,8 +31,27 @@ locally - docker
 
 ## Running the Application Locally
 *must have docker installed and running*
-- compose docker from git repo
-- open site using localhost:3000
+- clone this GitHub repository
+```
+// for ssh
+git clone git@github.com:rahulshamkuwar/ChatterSquare.git
+
+// for https
+git clone https://github.com/rahulshamkuwar/ChatterSquare.git
+```
+- make the bash file executable so the postgres container is finished setting up before running the web container
+```
+chmod u+x ./src/wait-for-it.sh
+```
+- run the docker instance
+```
+docker-compose up
+```
+- wait for the following message log then open site using localhost:3000
+```
+chattersquare-web-1  | Server is listening on port 3000
+chattersquare-web-1  | Database connection successful
+```
 - you will be directed to the login page. if the sesison is new, you must register and account or you will be automatically redirected to the register page when trying to sign into an account that does not exist. 
 - after you have successfully created an account, you are redirected back to the login page to sign in.
 - after signing in, you will be shown the 'general' section of the Square
