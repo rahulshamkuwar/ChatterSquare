@@ -61,7 +61,12 @@
     form.addEventListener('submit', function(e) {
       e.preventDefault();
       if (input.value) {
-        socket.emit('message', {"username": "<%=locals.session.user.username%>", "userid": "<%=locals.session.user.userId%>", "message": input.value, "square": channel});
+        perkObj = {};
+        perkObj.font = "<%=locals.session.user.perks.font%>";
+        perkObj.borderColor = "<%=locals.session.user.perks.borderColor%>";
+        perkObj.borderType = "<%=locals.session.user.perks.borderType%>";
+        perkObj.nameColor = "<%=locals.session.user.perks.nameColor%>";
+        socket.emit('message', {"username": "<%=locals.session.user.username%>", "userid": "<%=locals.session.user.userId%>", "perks": perkObj, "message": input.value, "square": channel});
         input.value = '';
       }
     });
@@ -82,9 +87,45 @@
       if (msg.square != channel) {
         return;
       }
+
+      console.log(msg);
+
       var elt = document.createElement('div');
       elt.classList.add("message");
       elt.innerHTML = `<strong>${msg.username}:</strong> ${msg.message}`;
+
+      //apply the perks
+      /*
+          perks: {
+            font: perks.font,
+            border: perks.border,
+            profilePicture: perks.profilepicture,
+            nameColor: perks.namecolor
+          }
+      */
+      if (msg.perks) {
+        //messages coming from history have perks from db, not emit, so they are strings
+        if (typeof(msg.perks) == "string") {
+          msg.perks.replace('\\', '');
+          msg.perks = JSON.parse(msg.perks);
+        }
+
+        if (msg.perks.font) {
+          var fontID = msg.perks.font[0];
+          elt.classList.add("font_" + fontID);
+        }
+        if (msg.perks.borderType) {
+          var color = '#455A64';
+          if (msg.perks.borderColor)
+            color = msg.perks.borderColor;
+          elt.style.border = `${msg.perks.borderType} ${msg.perks.borderColor}`;
+        }
+        if (msg.perks.nameColor) {
+          console.log(msg.perks.nameColor);
+          elt.innerHTML = `<strong style='color: ${msg.perks.nameColor}'>${msg.username}:</strong> ${msg.message}`;
+        }
+      }
+
       messages.appendChild(elt);
       messages.scrollTo(0, messages.scrollHeight);
     });

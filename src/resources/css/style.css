@@ -8,3 +8,24 @@
   filter: hue-rotate(30deg);
   filter: grayscale(70%);
 }
+
+
+.font_C {
+  font-family: 'Chakra Petch', sans-serif !important;
+}
+
+.font_D {
+  font-family: 'Dancing Script', cursive !important;
+}
+
+.font_L {
+  font-family: 'Lora', serif !important;
+}
+
+.font_M {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.font_S {
+  font-family: 'Source Code Pro', monospace !important;
+}

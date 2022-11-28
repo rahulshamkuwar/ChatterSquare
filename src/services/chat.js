@@ -13,10 +13,10 @@ const connection = (socket) => {
 
 
   socket.on('message', (msg) => {
-    db.newChat({chatName: socket.square, message: msg.message, userId: msg.userid}).then(() => {
-      // console.log(`[SOCKET ${socket.id[0]} - ${socket.square}] ${msg.message}`);
+    db.newChat({chatName: socket.square, message: msg.message, userId: msg.userid, perks: msg.perks}).then(() => {
+      // console.log(`[SOCKET ${socket.id[0]} - ${socket.square}] ${msg.message} (${msg.perks})`);
       io.emit('message', msg);
-      }).catch((err) => {
+    }).catch((err) => {
       console.log(err);
       socket.emit("alert", {
         message: "There was an error sending your message. Please try reloading the page.",
@@ -44,12 +44,8 @@ const connection = (socket) => {
 function sendMessageHistory(socket) {
   db.getChat({chatName: socket.square}).then(async (chat) => {
     var messageHistory = chat;
-    messageHistory.forEach((message) => {
-      db.getUser({userId: message.userid}).then((user) => {
-        message.username = user.username;
-        message.square = socket.square;
-        socket.emit('message', message);
-      }).catch((err) => {
+    for (const message of messageHistory) {
+      const user = await db.getUser({userId: message.userid}).catch((err) => {
         console.log(err);
         if (err.received > 0) { //dont send an error saying we can't load messages if there was no messages to load
           socket.emit("alert", {
@@ -58,7 +54,10 @@ function sendMessageHistory(socket) {
           });
         }
       });
-    });
+      message.username = user.username;
+      message.square = socket.square;
+      socket.emit('message', message);
+    };
   }).catch((err) => {
     console.log(err);
     // dont send an error saying we can't load messages if there was no messages to load
