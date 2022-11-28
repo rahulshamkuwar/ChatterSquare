@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const url = require('url');
 const db = require("../services/database");
+const QueryResultError = require("pg-promise").errors.QueryResultError;
+const qrec = require("pg-promise").errors.queryResultErrorCode;
 
 exports.login_get = (req, res) => {
   req.query.session = req.session;
@@ -11,14 +13,22 @@ exports.login_get = (req, res) => {
 exports.login_post = async (req, res) => {
   const { username, password } = req.body;
   await db.getUser({username: username}).then((user) => {
-    bcrypt.compare(password, user.password).then((result) => {
+    bcrypt.compare(password, user.password).then(async (result) => {
       if (result) {
+        const perks = await db.getPerks({userId: user.userid});
         req.session.user = {
           userId: user.userid,
           username: user.username,
           isAdmin: user.isadmin,
           points: user.points,
-          profilePicture: user.profilepicture
+          profilePicture: user.profilepicture,
+          perks: {
+            font: perks.font,
+            borderColor: perks.bordercolor,
+            borderType: perks.bordertype,
+            profilePicture: perks.profilepicture,
+            nameColor: perks.namecolor
+          }
         };
         req.session.user.password = "";
         req.session.save();
@@ -37,7 +47,7 @@ exports.login_post = async (req, res) => {
     });
   }).catch((err) => {
     console.log(err);
-    if (err.message === "No data returned from the query.") {
+    if (err instanceof QueryResultError && err.code === qrec.noData) {
       // Even though format is deprecated, it still works fine and there is no other better alternative. Refer to https://github.com/nodejs/node/issues/25099
       res.redirect(url.format({
         pathname:"/register",

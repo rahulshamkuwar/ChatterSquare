@@ -1,11 +1,18 @@
 <header>
 
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: lemonchiffon">
+    <nav class="navbar navbar-expand-lg navbar-light" 
+        style="  
+            height: 60px;
+            width: 100%;
+            background-color: #455A64;
+            font-size: 1.3rem;
+            "
+    >
         <div class="container-fluid">
             <!-- Left side - Logo & "Home" -->
-            <a class="navbar-brand" href="/">
-                <img src="/resources/img/ChSq-Logo.png" alt="logo" width="30" height="30" class="d-inline-block align-text-top">
-                Home
+            <a class="navbar-brand" style="color: #B0BEC5;" href="/square">
+                <img src="/resources/img/ChSq-Logo.png" alt="logo" width="30px" height="30px" class="d-inline-block align-text-top">
+                <strong>ChatterSquare</strong>
             </a>
             <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#chatter-navbar" aria-controls="chatter-navbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -16,7 +23,7 @@
                     <% if (locals.session && locals.session.user) { %>
                         <!-- Profile Dropdown -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" style="color: #B0BEC5;" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <%= locals.session.user.username %>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -26,16 +33,16 @@
                         </li>
                         <!-- Profile Picture -->
                         <li>
-                            <img src="/resources/img/Generic-Profile-1600x1600.png" alt="pfp" width="30" height="30">
+                            <img src="<%- locals.session.user.profilePicture %>" style="border: none; margin-top: 8px; border-radius: 8px; color: #455A64;" alt="pfp" width="30px" height="30px">
                         </li>
                     <% } else { %>
                         <li class="nav-item">
                             <% if (locals.pathname === "/login") { %>
-                                <a href="/register" class="nav-link active">
+                                <a href="/register" style="color: #B0BEC5;" class="nav-link active">
                                     Register
                                 </a>
                             <% } else { %>
-                                <a href="/login" class="nav-link active">
+                                <a href="/login" style="color: #B0BEC5;" class="nav-link active">
                                     Login
                                 </a>
                             <% } %>
@@ -45,4 +52,10 @@
             </div>
         </div>
     </nav>
+    <style>
+        .nav-link:hover {
+            transition: 0.3s;
+            color: white;
+        }
+    </style>
 </header>

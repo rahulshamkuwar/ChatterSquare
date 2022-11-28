@@ -24,11 +24,12 @@ app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, '/views'));
 
 // Use parsing middleware
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: "10mb"}));
 
 app.use(
   bodyParser.urlencoded({
-    extended: true,
+    limit: "10mb",
+    extended: true
   })
 );
 

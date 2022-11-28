@@ -1,302 +1,519 @@
-<%- include ('../partials/header') %>
-  <%- include ('../partials/nav-bar') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatterSquare</title>
+  <link rel="icon" type="image/x-icon" href="/resources/img/ChSq-Logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch&family=Dancing+Script&family=Lora&family=Montserrat&family=Source+Code+Pro&display=swap" rel="stylesheet"> 
+  <link rel="stylesheet" href="/resources/css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+</head>
+<body>
 
-    <main>
-      <div class="container">
-        <div class="col my-2">
-          <%- include ('../partials/alert') %>
-        </div>
-        <div style="background-color: #f8f9fa;">
-          <p class="h5 border-bottom p-2 mt-2">Profile Information</p>
-        </div>
+<%- include ('../partials/nav-bar') %>
+  <main>
+    <div class="container">
+      <div class="col my-2">
+        <%- include ('../partials/alert') %>
       </div>
+      <div style="background-color: #f8f9fa;">
+        <p class="h5 border-bottom p-2 mt-2">Profile Information</p>
+      </div>
+    </div>
 
-      <div class="container">
-        <% const user=locals.session.user; %>
-          <!-- Profile Picture and Points Summary -->
-          <div class="row d-flex justify-content-center align-items-center h-75">
-            <div class="col col-md-6">
-              <div class="card">
-                <div class="card-body p-4">
-                  <div class="d-flex">
-                    <div class="flex-shrink-0">
-                      <img src="/resources/img/Generic-Profile-1600x1600.png" alt="Generic profile picture"
-                        class="rounded-circle img-fluid" style="width: 180px; border-radius: 10px;">
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                      <h3 id="username_text" class="mb-1">
-                        <%= user.username %>
-                      </h3>
-                      <div class="row d-flex justify-content-center align-items-center h-20">
-                        <div class="col col-4 float-end">
-                          <button type="button" class="btn btn-light btn-sm flex-shrink-1">Change Photo</button>
-                        </div>
-                        <div class="col col-4 float-end">
-                          <button type="button" class="btn btn-light btn-sm flex-shrink-1" data-bs-toggle="modal"
-                            data-bs-target="#edit_username">
-                            Change Username
-                          </button>
-                        </div>
-                        <div class="col col-4 float-end">
-                          <button type="button" class="btn btn-light btn-sm flex-shrink-1" data-bs-toggle="modal"
-                            data-bs-target="#change_password">
-                            Change Password
-                          </button>
-                        </div>
+    <div class="container">
+      <% const user=locals.session.user; %>
+        <!-- Profile Picture and Points Summary -->
+        <div class="row d-flex justify-content-center align-items-center h-75">
+          <div class="col col-md-6">
+            <div class="card">
+              <div class="card-body p-4">
+                <div class="d-flex">
+                  <div class="flex-shrink-0">
+                    <img id="profile_picture_img" src="<%- user.profilePicture %>" alt="Profile Picture"
+                      class="rounded-circle img-fluid" style="width: 180px; border-radius: 10px;">
+                  </div>
+                  <div class="flex-grow-1 ms-3">
+                    <h3 id="username_text" class="mb-3">
+                      <%= user.username %>
+                    </h3>
+                    <div class="row d-flex">
+                      <div class="col col-3">
+                        <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#change_picture">
+                          Change Photo
+                        </button>
+                      </div>
+                      <div class="col col-3">
+                        <button type="submit button" class="btn btn-light btn-sm" data-bs-toggle="modal"
+                          data-bs-target="#edit_username">
+                          Change Username
+                        </button>
+                      </div>
+                      <div class="col col-3">
+                        <button type="submit button" class="btn btn-light btn-sm" data-bs-toggle="modal"
+                          data-bs-target="#change_password">
+                          Change Password
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col col-md-6">
-              <div class="d-flex justify-content-end float-end py-1">
-                <div>
-                  <p class="mb-1 h5 text-end">You have</p>
-                  <p class="h1">
-                    <%= user.points %>
-                  </p>
-                  <p class="mb-1 h5 text-end">points.</p>
-                </div>
-              </div>
-            </div>
           </div>
-
-          <!-- Points System/Redeem -->
-          <div style="background-color: #f8f9fa;">
-            <p class="h5 border-bottom p-2 mt-2">Points Information</p>
-          </div>
-          <div class="row row-cols-3 d-flex">
-            <div class="col pb-3">
-              <!-- TO-DO: postion button at the bottom, update perk details -->
-              <div class="card h-100">
-                <div class="card-body">
-                  <h5 class="card-title">Custom Name Color</h5>
-                  <p class="card-text">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Vestibulum venenatis, libero posuere scelerisque mollis, nisi lectus pharetra lectus,
-                    id tincidunt libero leo ut ex.
-                  </p>
-                  <a href="#" class="btn btn-primary float-bottom">Purchase Perk</a>
-                </div>
+          <div class="col col-md-6">
+            <div class="d-flex justify-content-end float-end py-1">
+              <div>
+                <p class="mb-1 h5 text-end">You have</p>
+                <p class="h1">
+                  <%= user.points %>
+                </p>
+                <p class="mb-1 h5 text-end">points.</p>
               </div>
-            </div>
-            <div class="col pb-3">
-              <div class="card h-100">
-                <div class="card-body">
-                  <h5 class="card-title">Custom Message Border</h5>
-                  <p class="card-text">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Vestibulum venenatis, libero posuere scelerisque mollis, nisi lectus pharetra lectus,
-                    id tincidunt libero leo ut ex.
-                  </p>
-                  <a href="#" class="btn btn-primary">Purchase Perk</a>
-                </div>
-              </div>
-            </div>
-            <div class="col pb-3">
-              <div class="card h-100">
-                <div class="card-body">
-                  <h5 class="card-title">Custom Message Font</h5>
-                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                  <a href="#" class="btn btn-primary">Purchase Perk</a>
-                </div>
-              </div>
-            </div>
-            <div class="col pb-3">
-              <div class="card h-100">
-                <div class="card-body">
-                  <h5 class="card-title">Animated Profile Picture</h5>
-                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                  <a href="#" class="btn btn-primary">Purchase Perk</a>
-                </div>
-              </div>
-            </div>
-          </div>
-      </div>
-
-      <!-- Change Password Modal -->
-      <div class="modal fade" id="change_password" tabindex="-1">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Change Password</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form id="password_form" action="/profile/change_password" method="post" class="needs-validation" novalidate>
-                <div class="row g-3 mb-2">
-                  <div class="col-5">
-                    <label for="old_password" class="col-form-label">Old Password</label>
-                  </div>
-                  <div class="col-7">
-                    <input type="password" id="old_password" class="form-control" name="oldPassword" required>
-                    <div class="invalid-feedback">
-                      Please enter old password.
-                    </div>
-                  </div>
-                </div>
-                <div class="row g-3 mb-2">
-                  <div class="col-5">
-                    <label for="new_password" class="col-form-label">New Password</label>
-                  </div>
-                  <div class="col-7">
-                    <input type="password" id="new_password" class="form-control" name="newPassword" onkeyup="validatePassword()" required>
-                    <div class="invalid-feedback">
-                      Please choose a password.
-                    </div>
-                  </div>
-                </div>
-                <div class="row g-3">
-                  <div class="col-5">
-                    <label for="confirm_password" class="col-form-label">Confirm New Password</label>
-                  </div>
-                  <div class="col-7">
-                    <input type="password" id="confirm_password" class="form-control" name="confirmPassword" onkeyup="validatePassword()">
-                    <div id="match_password" hidden>
-                      Passwords don't match.
-                    </div>
-                    <div id="empty_password" hidden>
-                      This field cannot be empty.
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="submit button" form="password_form" class="btn btn-primary">Save changes</button>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Edit Username Modal -->
-      <div class="modal fade" id="edit_username" tabindex="-1">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Edit Username</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- Points System/Redeem -->
+        <div style="background-color: #f8f9fa;">
+          <p class="h5 border-bottom p-2 mt-2">Points Information</p>
+        </div>
+        <div class="row row-cols-3 d-flex">
+          <div class="col pb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">Custom Name Color</h5>
+                <p class="card-text">
+                  Highlight your name with a little color! <br>
+                  Your name will appear in a selected color of your choice
+                  <h4>100 Points</h4>
+                </p>
+                  <% if (user.points >= 100 && user.perks.nameColor === "") { %>
+                    <button type="submit button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_name_color">Purchase Perk</button>
+                  <% } else if (user.perks.nameColor !== "") { %>
+                    <button type="submit button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_name_color">Change Color</button>
+                  <% } else { %>
+                    <button type="submit button" class="btn btn-primary float-bottom disabled" data-bs-toggle="modal" data-bs-target="#buy_name_color">Purchase Perk</button>
+                  <% } %>
+              </div>
             </div>
-            <div class="modal-body">
-              <form id="username_form" action="" method="post" class="needs-validation" novalidate>
-                <div class="row g-3 mb-2">
-                  <div class="col-4">
-                    <label for="username" class="col-form-label">Old Username</label>
-                  </div>
-                  <div class="col-8">
-                    <input type="text" id="old_username" class="form-control" required onkeyup="validateUsername()">
-                    <div id="empty_old_username" hidden>
-                      Please enter old username.
-                    </div>
-                    <div id="match_old_username" hidden>
-                      Does not match current username.
-                    </div>
-                  </div>
-                </div>
-                <div class="row g-3">
-                  <div class="col-4">
-                    <label for="username" class="col-form-label">New Username</label>
-                  </div>
-                  <div class="col-8">
-                    <input type="text" id="new_username" class="form-control" required onkeyup="validateUsername()">
-                    <div id="empty_new_username" hidden>
-                      Please enter new username.
-                    </div>
-                    <div id="match_new_username" hidden>
-                      Usernames are the same.
-                    </div>
-                  </div>
-                </div>
-              </form>
+          </div>
+          <div class="col pb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">Custom Message Border</h5>
+                <p class="card-text">
+                  Give your messages a little flair! <br>
+                  Borders around your message will appear in a special border
+                  <h4>100 Points</h4>
+                </p>
+                <% if (user.perks.borderType !== "" && user.perks.borderColor !== "") { %>
+                  <button type="submit button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_border">Change Border</button>
+                <%} else if (user.points >= 100) { %>
+                  <button type="submit button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_border">Purchase Perk</button>
+                <% } else { %>
+                  <button type="submit button" class="btn btn-primary float-bottom disabled">Purchase Perk</button>
+                <% } %>
+              </div>
             </div>
-            <div class="modal-footer">
-              <button type="submit button" form="username_form" class="btn btn-primary">Save changes</button>
+          </div>
+          <div class="col pb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">Animated Profile Picture</h5>
+                <p class="card-text">
+                  Have some fun with your profile appearance! <br>
+                  You can change your profile picture to an GIF to add soome fun
+                  <h4>100 Points</h4>
+                </p>
+                <form action="/profile/update_perks" method="post">
+                  <label for="new_font" class="col-form-label" hidden></label>
+                  <input type="text" id="new_font" class="form-control" name="subtractPoints" value="true" hidden>
+                  <% if (user.points >= 100 && !user.perks.profilePicture) { %>
+                    <button type="submit button" value="true" name="profilePicture" class="btn btn-primary float-bottom">Purchase Perk</button>
+                  <% } else if (user.perks.profilePicture) { %>
+                    <button type="submit button" class="btn btn-primary float-bottom disabled">Purchased</button>
+                  <% } else { %>
+                    <button type="submit button" class="btn btn-primary float-bottom disabled">Purchase Perk</button>
+                  <% } %>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col pb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">Custom Message Font</h5>
+                <p class="card-text">
+                  Add a little something special to your messages! <br>
+                  Messages sent by you will appear in a special font
+                  <h4>100 Points</h4>
+                </p>
+                <% if (user.perks.font !== "") { %>
+                  <button type="submit button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_font">Change Font</button>
+                <%} else if (user.points >= 100) { %>
+                  <button type="submit button" class="btn btn-primary float-bottom" data-bs-toggle="modal" data-bs-target="#buy_font">Purchase Perk</button>
+                <% } else { %>
+                  <button type="submit button" class="btn btn-primary float-bottom disabled">Purchase Perk</button>
+                <% } %>
+              </div>
             </div>
           </div>
         </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal fade" id="change_password" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Change Password</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="password_form" action="/profile/change_password" method="post" class="needs-validation" novalidate>
+              <div class="row g-3 mb-2">
+                <div class="col-5">
+                  <label for="old_password" class="col-form-label">Old Password</label>
+                </div>
+                <div class="col-7">
+                  <input type="password" id="old_password" class="form-control" name="oldPassword" required>
+                  <div class="invalid-feedback">
+                    Please enter old password.
+                  </div>
+                </div>
+              </div>
+              <div class="row g-3 mb-2">
+                <div class="col-5">
+                  <label for="new_password" class="col-form-label">New Password</label>
+                </div>
+                <div class="col-7">
+                  <input type="password" id="new_password" class="form-control" name="newPassword" onkeyup="validatePassword()" required>
+                  <div class="invalid-feedback">
+                    Please choose a password.
+                  </div>
+                </div>
+              </div>
+              <div class="row g-3">
+                <div class="col-5">
+                  <label for="confirm_password" class="col-form-label">Confirm New Password</label>
+                </div>
+                <div class="col-7">
+                  <input type="password" id="confirm_password" class="form-control" name="confirmPassword" onkeyup="validatePassword()">
+                  <div id="match_password" hidden>
+                    Passwords don't match.
+                  </div>
+                  <div id="empty_password" hidden>
+                    This field cannot be empty.
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit button" form="password_form" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
       </div>
-      <script type="text/javascript">
-        function validatePassword() {
-          const password = document.getElementById("new_password");
-          const confirm_password = document.getElementById("confirm_password");
-          const match = document.getElementById("match_password");
-          const empty = document.getElementById("empty_password");
-          if (password.value !== confirm_password.value) {
-            confirm_password.setCustomValidity("Passwords don't match");
-            match.classList.add("invalid-feedback");
-            match.hidden = false;
-            empty.classList.remove("invalid-feedback");
-            empty.hidden = true;
-          } else if (confirm_password.value === "") {
-            confirm_password.setCustomValidity("This field cannot be empty.");
-            empty.classList.add("invalid-feedback");
-            empty.hidden = false;
-            match.classList.remove("invalid-feedback");
-            match.hidden = true;
-          } else {
-            confirm_password.setCustomValidity("");
-          }
-        };
+    </div>
+
+    <!-- Edit Username Modal -->
+    <div class="modal fade" id="edit_username" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Username</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="username_form" action="/profile/change_username" method="post" class="needs-validation" novalidate>
+              <div class="row g-3 mb-2">
+                <div class="col-4">
+                  <label for="username" class="col-form-label">Old Username</label>
+                </div>
+                <div class="col-8">
+                  <input type="text" id="old_username" class="form-control" required onkeyup="validateUsername()">
+                  <div id="empty_old_username" hidden>
+                    Please enter old username.
+                  </div>
+                  <div id="match_old_username" hidden>
+                    Does not match current username.
+                  </div>
+                </div>
+              </div>
+              <div class="row g-3">
+                <div class="col-4">
+                  <label for="username" class="col-form-label">New Username</label>
+                </div>
+                <div class="col-8">
+                  <input type="text" id="new_username" class="form-control" required onkeyup="validateUsername()" name="newUsername">
+                  <div id="empty_new_username" hidden>
+                    Please enter new username.
+                  </div>
+                  <div id="match_new_username" hidden>
+                    Usernames are the same.
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit button" form="username_form" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Change Profile Picture -->
+    <div class="modal fade" id="change_picture" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Change Profile Picture</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="picture_form" action="/profile/change_profile_picture" method="post" class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="formFile" class="form-label">New Profile Picture</label>
+                <input class="form-control" type="file" id="formFile" name="imageFile" accept="image/png, image/jpeg, image/jpg<%- user.perks.profilePicture ? ', image/gif' : ''%>" required>
+                <div class="invalid-feedback">
+                  Please upload an image.
+                </div>
+              </div>
+              <div class="row g-3 mb-2">
+                <div class="col-5">
+                  <label for="profile_picture" class="col-form-label" hidden>ProfilePic</label>
+                </div>
+                <div class="col-7">
+                  <input type="text" id="profile_picture" class="form-control" name="profilePicture" hidden>
+                  <div class="invalid-feedback"></div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit button" form="picture_form" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pick Name Color -->
+    <div class="modal fade" id="buy_name_color" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Pick A Color</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="name_color_form" action="/profile/update_perks" method="post" class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="colorPicker" class="form-label">Profile Name Color</label>
+                <input class="form-control form-control-color" value="<%- user.perks.nameColor %>" type="color" id="colorPicker" name="nameColor" required>
+                <div class="invalid-feedback">
+                  Please pick a color.
+                </div>
+              </div>
+              <label for="new_name_color" class="col-form-label" hidden>ProfilePic</label>
+              <input type="text" id="new_name_color" class="form-control" name="subtractPoints" value="<%-user.perks.nameColor === ''%>" hidden>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit button" form="name_color_form" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pick Font -->
+    <div class="modal fade" id="buy_font" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Pick A Font</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="font_form" action="/profile/update_perks" method="post" class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="pick_font" class="form-label">Chat Message Font</label>
+                <select id="pick_font" name="font" required class="form-select" aria-label="Select Font">
+                  <option selected disabled value="">Choose one of the following</option>
+                  <option value="Chakra Petch">Chakra Petch</option>
+                  <option value="Montserrat">Montserrat</option>
+                  <option value="Source Code Pro">Source Code Pro</option>
+                  <option value="Dancing Script">Dancing Script</option>
+                  <option value="Lora">Lora</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please pick a font.
+                </div>
+                <div id="fontPreview" style="padding-top: 5px; font-size: 1.12rem;">
+                  Select a new font to see a preview.
+                </div>
+              </div>
+              <label for="new_font" class="col-form-label" hidden></label>
+              <input type="text" id="new_font" class="form-control" name="subtractPoints" value="<%-user.perks.font === ''%>" hidden>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit button" form="font_form" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Pick Border -->
+    <div class="modal fade" id="buy_border" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Pick A Border</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="border_form" action="/profile/update_perks" method="post" class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="pick_border_type" class="form-label">Chat Message Border Type</label>
+                <select id="pick_border_type" name="borderType" required class="form-select" aria-label="Select Border Type">
+                  <option selected disabled value="">Choose one of the following</option>
+                  <option value="4px solid">Solid</option>
+                  <option value="4px dashed">Dashed</option>
+                  <option value="4px solid">Dotted</option>
+                  <option value="4px inset">Inset</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please pick a border.
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="pick_border_color" class="form-label">Chat Message Border Color</label>
+                <input class="form-control form-control-color" value="<%- user.perks.borderColor %>" type="color" id="borderColorPicker" name="borderColor" required>
+                <div class="invalid-feedback">
+                  Please pick a border.
+                </div>
+              </div>
+              <label for="new_font" class="col-form-label" hidden></label>
+              <input type="text" id="new_font" class="form-control" name="subtractPoints" value="<%-user.perks.borderType === '' && user.perks.borderColor === ''%>" hidden>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit button" form="border_form" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      function validatePassword() {
+        const password = document.getElementById("new_password");
+        const confirm_password = document.getElementById("confirm_password");
+        const match = document.getElementById("match_password");
+        const empty = document.getElementById("empty_password");
+        if (password.value !== confirm_password.value) {
+          confirm_password.setCustomValidity("Passwords don't match");
+          match.classList.add("invalid-feedback");
+          match.hidden = false;
+          empty.classList.remove("invalid-feedback");
+          empty.hidden = true;
+        } else if (confirm_password.value === "") {
+          confirm_password.setCustomValidity("This field cannot be empty.");
+          empty.classList.add("invalid-feedback");
+          empty.hidden = false;
+          match.classList.remove("invalid-feedback");
+          match.hidden = true;
+        } else {
+          confirm_password.setCustomValidity("");
+        }
+      };
+
+      document.getElementById("pick_font").onchange = function() {
+        var value = document.getElementById("pick_font").value;
+        document.getElementById("fontPreview").style.fontFamily = value;
+        document.getElementById("fontPreview").innerHTML = "This is a font preview!"
+      };
+      
+      function validateUsername() {
+        const user = document.getElementById("username_text").innerText;
+        const old_username = document.getElementById("old_username");
+        const new_username = document.getElementById("new_username");
+        const oldMatch = document.getElementById("match_old_username");
+        const oldEmpty = document.getElementById("empty_old_username");
+        const newMatch = document.getElementById("match_new_username");
+        const newEmpty = document.getElementById("empty_new_username");
+        if (old_username.value === "") {
+          old_username.setCustomValidity("Empty username");
+          oldMatch.classList.remove("invalid-feedback");
+          oldMatch.hidden = true;
+          oldEmpty.classList.add("invalid-feedback");
+          oldEmpty.hidden = false;
+        } else if (old_username.value !== user) {
+          old_username.setCustomValidity("Not current username");
+          oldMatch.classList.add("invalid-feedback");
+          oldMatch.hidden = false;
+          oldEmpty.classList.remove("invalid-feedback");
+          oldEmpty.hidden = true;
+        } else {
+          old_username.setCustomValidity("");
+        }
         
-        function validateUsername() {
-          const user = document.getElementById("username_text").innerText;
-          const old_username = document.getElementById("old_username");
-          const new_username = document.getElementById("new_username");
-          const oldMatch = document.getElementById("match_old_username");
-          const oldEmpty = document.getElementById("empty_old_username");
-          const newMatch = document.getElementById("match_new_username");
-          const newEmpty = document.getElementById("empty_new_username");
-
-          if (old_username.value === "") {
-            old_username.setCustomValidity("Empty username");
-            oldMatch.classList.remove("invalid-feedback");
-            oldMatch.hidden = true;
-            oldEmpty.classList.add("invalid-feedback");
-            oldEmpty.hidden = false;
-          } else if (old_username.value !== user) {
-            old_username.setCustomValidity("Not current username");
-            oldMatch.classList.add("invalid-feedback");
-            oldMatch.hidden = false;
-            oldEmpty.classList.remove("invalid-feedback");
-            oldEmpty.hidden = true;
-          } else {
-            old_username.setCustomValidity("");
+        if (new_username.value === "") {
+          new_username.setCustomValidity("Usernames match");
+          newMatch.classList.remove("invalid-feedback");
+          newMatch.hidden = true;
+          newEmpty.classList.add("invalid-feedback");
+          newEmpty.hidden = false;
+        } else if (new_username.value === old_username.value) {
+          new_username.setCustomValidity("Usernames match");
+          newMatch.classList.add("invalid-feedback");
+          newMatch.hidden = false;
+          newEmpty.classList.remove("invalid-feedback");
+          newEmpty.hidden = true;
+        } else {
+          new_username.setCustomValidity("");
+        }
+      };
+      
+      let forms = document.querySelectorAll('.needs-validation');
+      forms.forEach((form) => {
+        form.addEventListener('submit', (event) => {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
           }
-          
-          if (new_username.value === "") {
-            new_username.setCustomValidity("Usernames match");
-            newMatch.classList.remove("invalid-feedback");
-            newMatch.hidden = true;
-            newEmpty.classList.add("invalid-feedback");
-            newEmpty.hidden = false;
-          } else if (new_username.value === old_username.value) {
-            new_username.setCustomValidity("Usernames match");
-            newMatch.classList.add("invalid-feedback");
-            newMatch.hidden = false;
-            newEmpty.classList.remove("invalid-feedback");
-            newEmpty.hidden = true;
-          } else {
-            new_username.setCustomValidity("");
+          if (form.id === "password_form") {
+            validatePassword();
+          } else if (form.id === "username_form") {
+            validateUsername();
           }
-        };
-
-        let forms = document.querySelectorAll('.needs-validation');
-        forms.forEach((form) => {
-          form.addEventListener('submit', (event) => {
-            if (!form.checkValidity()) {
-              event.preventDefault();
-              event.stopPropagation();
-            }
-            if (form.id === "password_form") {
-              validatePassword();
+          form.classList.add('was-validated');
+          if (form.id === "picture_form") {
+            event.preventDefault();
+            const file = document.querySelector('input[type=file]').files[0];
+            const check = file.name.split(".");
+            const extension = check[check.length - 1];
+            if (extension !== "jpeg" && extension !== "jpg" && extension !== "png" && extension !== "gif") {
+              profile_picture.value = "";
+              form.submit();
             } else {
-              validateUsername();
+              const reader = new FileReader();
+              reader.addEventListener("load", () => {
+                profile_picture.value = reader.result;
+                form.submit();
+              },false);
+              reader.readAsDataURL(file);
             }
-            form.classList.add('was-validated');
-          }, false);
-        });
-      </script>
-    </main>
+          }
+        }, false);
+      });
+    </script>
+  </main>
 
-    <%- include ('../partials/footer') %>
+  <%- include ('../partials/footer') %>
