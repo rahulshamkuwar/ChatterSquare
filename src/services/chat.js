@@ -44,12 +44,8 @@ const connection = (socket) => {
 function sendMessageHistory(socket) {
   db.getChat({chatName: socket.square}).then(async (chat) => {
     var messageHistory = chat;
-    messageHistory.forEach((message) => {
-      db.getUser({userId: message.userid}).then((user) => {
-        message.username = user.username;
-        message.square = socket.square;
-        socket.emit('message', message);
-      }).catch((err) => {
+    for (const message of messageHistory) {
+      const user = await db.getUser({userId: message.userid}).catch((err) => {
         console.log(err);
         if (err.received > 0) { //dont send an error saying we can't load messages if there was no messages to load
           socket.emit("alert", {
@@ -58,7 +54,10 @@ function sendMessageHistory(socket) {
           });
         }
       });
-    });
+      message.username = user.username;
+      message.square = socket.square;
+      socket.emit('message', message);
+    };
   }).catch((err) => {
     console.log(err);
     // dont send an error saying we can't load messages if there was no messages to load
