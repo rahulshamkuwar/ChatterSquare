@@ -8,19 +8,27 @@ services:
     volumes:
       - ChatterSquare:/var/lib/postgresql/data
       - ./src/init_data:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   web:
     image: node:lts
-    user: root
+    user: node
     working_dir: /home/node/app
     env_file: .env
     environment:
       - NODE_ENV=development
     depends_on:
+      db:
+        condition: service_healthy
+    links:
       - db
     ports:
       - '3000:3000'
     volumes:
       - ./src:/home/node/app
-    command: bash -c "chmod u+x ./wait-for-it.sh && ./wait-for-it.sh db:5432 -- npm start"
+    command: "npm start"
 volumes:
   ChatterSquare:
