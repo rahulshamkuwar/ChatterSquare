@@ -90,3 +90,5 @@ chattersquare-web-1  | Database connection successful
 ## Link to the deployed application
 http://csci3308.int.colorado.edu:49167/
 
+## Link to the video demo
+https://www.youtube.com/watch?v=ht-1mvag0VQ
