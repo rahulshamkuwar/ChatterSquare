@@ -9,7 +9,7 @@ ChatterSquare is a messaging application. Each message sent is 10 points. The mo
 - Rahul Shamkuwar: rash6973@colorad.edu; rahulshamkuwar
 - Raleigh Darcy: rada2150@colorado.edu; raleighjd
 - Rachel Lam: rala5772@colorado.edu; rachelmlam
-- Gabriel Khabner: email; gabek25
+- Gabriel Khabner: gakh9214@colorado.edu; gabek25
 
 ## Tech Stack Used
 **Backend**
